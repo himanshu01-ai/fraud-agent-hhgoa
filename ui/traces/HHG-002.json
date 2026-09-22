@@ -149,21 +149,21 @@
    ]
   },
   {
-   "at": "2026-09-22T18:31:13+00:00",
+   "at": "2026-09-22T19:02:27+00:00",
    "action": "CREATE_CASE",
    "route": "auto",
    "status": "executed",
    "detail": "case opened for C11891-K1"
   },
   {
-   "at": "2026-09-22T18:31:13+00:00",
+   "at": "2026-09-22T19:02:27+00:00",
    "action": "VERIFY_WITH_CUSTOMER",
    "route": "auto",
    "status": "executed",
    "detail": "verification request sent to holder of C11891-K1"
   },
   {
-   "at": "2026-09-22T18:31:13+00:00",
+   "at": "2026-09-22T19:02:27+00:00",
    "action": "CLOSE_NO_FRAUD",
    "route": "auto",
    "status": "executed",

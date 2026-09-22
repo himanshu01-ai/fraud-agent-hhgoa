@@ -84,5 +84,5 @@
   "stop_reason": "Probability 0.01 \u2264 0.15 supported by 2 independent pieces of evidence (\u00a76). Further steps would not change the decision.",
   "tool_calls": 8,
   "tokens": 0,
-  "latency_s": 0.02
+  "latency_s": 0.04
 }

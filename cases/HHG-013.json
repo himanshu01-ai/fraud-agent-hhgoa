@@ -132,5 +132,5 @@
   "stop_reason": "The verification response settles the question (\u00a76).",
   "tool_calls": 8,
   "tokens": 0,
-  "latency_s": 0.03
+  "latency_s": 0.05
 }

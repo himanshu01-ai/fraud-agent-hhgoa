@@ -1,3 +1,4 @@
 # No fixed roles: every path is owned by the whole team, so any PR needs one teammate's approval.
-# Replace with the real GitHub usernames.
-*   @himanshu01-ai @member-2 @member-3
+# Every handle listed here must be a real GitHub user with write access, or GitHub
+# reports a CODEOWNERS syntax error and the rule stops applying.
+*   @himanshu01-ai @hitesh1126
