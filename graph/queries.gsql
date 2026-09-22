@@ -1,0 +1,107 @@
+USE GRAPH FraudGraph
+
+// 1. Card activity in a time window (card history, velocity, bursts, testing sequences)
+CREATE OR REPLACE QUERY card_txns(VERTEX<Card> c, DATETIME t_from, DATETIME t_to) FOR GRAPH FraudGraph {
+  S = {c};
+  T = SELECT t FROM S:s -(MADE:e)- Txn:t
+      WHERE t.ts >= t_from AND t.ts <= t_to;
+  PRINT T;
+}
+
+// 2. Every transaction made from a device profile in a window (device neighbours / rings)
+CREATE OR REPLACE QUERY device_txns(VERTEX<DeviceProfile> d, DATETIME t_from, DATETIME t_to) FOR GRAPH FraudGraph {
+  S = {d};
+  T = SELECT t FROM S:s -(FROM_DEVICE:e)- Txn:t
+      WHERE t.ts >= t_from AND t.ts <= t_to;
+  PRINT T;
+}
+
+// 3. Device profile footprint: how many cards/customers ever used it
+CREATE OR REPLACE QUERY device_footprint(VERTEX<DeviceProfile> d) FOR GRAPH FraudGraph {
+  SetAccum<STRING> @@cards;
+  SetAccum<STRING> @@customers;
+  SumAccum<INT> @@n;
+  S = {d};
+  T = SELECT t FROM S:s -(FROM_DEVICE:e)- Txn:t
+      ACCUM @@cards += t.card_id, @@customers += t.customer_id, @@n += 1;
+  PRINT @@n AS n_txns, @@cards.size() AS n_cards, @@customers.size() AS n_customers;
+}
+
+// 4. The real cardholder's own habits (behaviour profile shared by one person's transactions)
+CREATE OR REPLACE QUERY cardholder_txns(VERTEX<Cardholder> h) FOR GRAPH FraudGraph {
+  S = {h};
+  T = SELECT t FROM S:s -(BEHAVES_AS:e)- Txn:t;
+  PRINT T;
+}
+
+// 5. Two-hop shared-origin traversal: card -> its txns -> devices -> other txns -> other cards
+CREATE OR REPLACE QUERY shared_device_cards(VERTEX<Card> c, DATETIME t_from, DATETIME t_to) FOR GRAPH FraudGraph {
+  MapAccum<STRING, SetAccum<STRING>> @@cards_by_device;
+  S = {c};
+  T1 = SELECT t FROM S:s -(MADE:e)- Txn:t WHERE t.ts >= t_from AND t.ts <= t_to;
+  D  = SELECT d FROM T1:t -(FROM_DEVICE:e)- DeviceProfile:d;
+  T2 = SELECT t FROM D:d -(FROM_DEVICE:e)- Txn:t
+       WHERE t.ts >= t_from AND t.ts <= t_to
+       ACCUM @@cards_by_device += (d.id -> t.card_id);
+  PRINT @@cards_by_device;
+}
+
+// 6. Closed cases on a card (prior outcomes for this cardholder)
+CREATE OR REPLACE QUERY cases_by_card(VERTEX<Card> c) FOR GRAPH FraudGraph {
+  S = {c};
+  C = SELECT cc FROM S:s -((ON_CARD|CONNECTED_TO):e)- ClosedCase:cc;
+  PRINT C;
+}
+
+// 7. Closed cases that involved any transaction from a device profile
+CREATE OR REPLACE QUERY cases_by_device(VERTEX<DeviceProfile> d) FOR GRAPH FraudGraph {
+  S = {d};
+  T = SELECT t FROM S:s -(FROM_DEVICE:e)- Txn:t;
+  C = SELECT cc FROM T:t -(INVOLVES:e)- ClosedCase:cc;
+  PRINT C;
+}
+
+// 8. Our own case memory: earlier investigations with the same pattern / on the same device
+CREATE OR REPLACE QUERY case_memory(STRING pat, VERTEX<DeviceProfile> d) FOR GRAPH FraudGraph {
+  S = {InvestigationCase.*};
+  R = SELECT s FROM S:s WHERE s.pattern == pat;
+  D0 = {d};
+  RD = SELECT ic FROM D0:x -(INV_DEVICE:e)- InvestigationCase:ic;
+  PRINT R, RD;
+}
+
+// 9. Proximity to known fraud: card -> txns -> rare devices -> txns -> confirmed-fraud closed cases
+CREATE OR REPLACE QUERY fraud_proximity(VERTEX<Card> c, DATETIME t_from, DATETIME t_to, INT max_customers) FOR GRAPH FraudGraph {
+  SetAccum<STRING> @custs;
+  S = {c};
+  T1 = SELECT t FROM S:s -(MADE:e)- Txn:t WHERE t.ts >= t_from AND t.ts <= t_to;
+  D  = SELECT d FROM T1:t -(FROM_DEVICE:e)- DeviceProfile:d WHERE NOT d.id LIKE "NA | NA%";
+  D2 = SELECT d FROM D:d -(FROM_DEVICE:e)- Txn:t
+       ACCUM d.@custs += t.customer_id
+       HAVING d.@custs.size() <= max_customers;
+  T2 = SELECT t FROM D2:d -(FROM_DEVICE:e)- Txn:t;
+  C  = SELECT cc FROM T2:t -(INVOLVES:e)- ClosedCase:cc WHERE cc.outcome == "confirmed_fraud";
+  PRINT C;
+}
+
+// 10. Ring scan (monitoring beyond the 20 cases): rare device profiles hitting many cards in a window
+CREATE OR REPLACE QUERY ring_scan(DATETIME t_from, DATETIME t_to, INT min_cards, INT max_customers) FOR GRAPH FraudGraph {
+  SetAccum<STRING> @cards;
+  SetAccum<STRING> @all_custs;
+  SumAccum<INT> @n;
+  SumAccum<INT> @n_new;
+  SumAccum<INT> @n_proxy;
+  D = {DeviceProfile.*};
+  R = SELECT d FROM D:d -(FROM_DEVICE:e)- Txn:t
+      WHERE NOT d.id LIKE "NA | NA%"
+      ACCUM d.@all_custs += t.customer_id,
+            IF t.ts >= t_from AND t.ts <= t_to THEN
+              d.@cards += t.card_id, d.@n += 1,
+              IF t.id_15 == "New" THEN d.@n_new += 1 END,
+              IF t.id_23 == "IP_PROXY:ANONYMOUS" OR t.id_23 == "IP_PROXY:HIDDEN" THEN d.@n_proxy += 1 END
+            END
+      HAVING d.@cards.size() >= min_cards AND d.@all_custs.size() <= max_customers;
+  PRINT R[R.@cards AS cards, R.@n AS n_txns, R.@n_new AS n_new, R.@n_proxy AS n_proxy];
+}
+
+INSTALL QUERY fraud_proximity, ring_scan, card_txns, device_txns, device_footprint, cardholder_txns, shared_device_cards, cases_by_card, cases_by_device, case_memory

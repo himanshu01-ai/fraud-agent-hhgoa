@@ -1,0 +1,192 @@
+{
+ "case_id": "HHG-003",
+ "trace": [
+  {
+   "step": 1,
+   "name": "trigger",
+   "detail": "customer_report: Customer C08623 message: 'I never made this $49.00 purchase. Please check my card.' Refers to 3530164.",
+   "tool_calls_so_far": 1
+  },
+  {
+   "step": 2,
+   "name": "card_profile",
+   "detail": "980 prior transactions on C08623-K2; median $67.92",
+   "tool_calls_so_far": 3
+  },
+  {
+   "step": 3,
+   "name": "cardholder_profile",
+   "detail": "behaviour profile C08623_330.0_161.0: 2 transactions",
+   "tool_calls_so_far": 4
+  },
+  {
+   "step": 4,
+   "name": "prior_cases",
+   "detail": "6 closed cases on this card, 0 on this device",
+   "tool_calls_so_far": 6
+  },
+  {
+   "step": 5,
+   "name": "detectors",
+   "detail": "new_email(+0.4), amount_in_range(-0.3), region_habitual(-0.8), case_memory_model(+0.0)",
+   "tool_calls_so_far": 6
+  },
+  {
+   "step": 6,
+   "name": "assess",
+   "detail": "p=0.21, 2 fraud / 2 legitimate independent evidence, provisional pattern account_takeover, verdict legitimate",
+   "tool_calls_so_far": 6
+  },
+  {
+   "step": 7,
+   "name": "policy",
+   "detail": "initial=['CREATE_CASE', 'VERIFY_WITH_CUSTOMER'] response=confirm final=['CLOSE_NO_FRAUD']",
+   "tool_calls_so_far": 6
+  },
+  {
+   "step": 8,
+   "name": "memory",
+   "detail": "retrieved closed cases ['CC-2850', 'CC-2749', 'CC-4957']; 0 earlier investigations in case memory",
+   "tool_calls_so_far": 7
+  },
+  {
+   "step": 9,
+   "name": "explain",
+   "detail": "summary and report narrative written (template)",
+   "tool_calls_so_far": 7
+  },
+  {
+   "step": 10,
+   "name": "execute",
+   "detail": "CREATE_CASE:executed, VERIFY_WITH_CUSTOMER:executed, CLOSE_NO_FRAUD:executed",
+   "tool_calls_so_far": 7
+  },
+  {
+   "step": 11,
+   "name": "case_memory_write",
+   "detail": "INV-HHG-003 written to local case memory",
+   "tool_calls_so_far": 8
+  }
+ ],
+ "tool_log": [
+  {
+   "tool": "get_txn",
+   "params": {
+    "txn_id": 3530164
+   },
+   "rows": 1
+  },
+  {
+   "tool": "card_txns",
+   "params": {
+    "card_id": "C08623-K2",
+    "t_from": "2016-07-01 00:00:00",
+    "t_to": "2016-12-10 13:01:20"
+   },
+   "rows": 980
+  },
+  {
+   "tool": "card_txns",
+   "params": {
+    "card_id": "C08623-K2",
+    "t_from": "2016-12-03 13:01:21",
+    "t_to": "2016-12-10 15:01:21"
+   },
+   "rows": 54
+  },
+  {
+   "tool": "cardholder_txns",
+   "params": {
+    "uid": "C08623_330.0_161.0"
+   },
+   "rows": 2
+  },
+  {
+   "tool": "fraud_proximity",
+   "params": {
+    "card_id": "C08623-K2"
+   },
+   "rows": 0
+  },
+  {
+   "tool": "cases_by_card",
+   "params": {
+    "card_id": "C08623-K2"
+   },
+   "rows": 6
+  },
+  {
+   "tool": "case_memory",
+   "params": {
+    "pattern": "none",
+    "device": null
+   },
+   "rows": 10
+  },
+  {
+   "tool": "write_case(local)",
+   "params": {
+    "id": "INV-HHG-003"
+   },
+   "rows": 1
+  }
+ ],
+ "decision_history": [
+  {
+   "phase": "assessment",
+   "probability": 0.21,
+   "verdict": "legitimate",
+   "recommended": [
+    "CREATE_CASE",
+    "VERIFY_WITH_CUSTOMER"
+   ]
+  },
+  {
+   "phase": "evidence_request",
+   "type": "customer_validation",
+   "response": "confirm",
+   "detail": "Shown the merchant, date, amount and region, the customer recognises the charge as their own (it matches their regular spending) and withdraws the dispute (simulated: response chosen to be consistent with the pre-request evidence, assessed probability 0.21)"
+  },
+  {
+   "phase": "reassessment",
+   "probability": 0.08,
+   "verdict": "legitimate",
+   "recommended": [
+    "CLOSE_NO_FRAUD"
+   ]
+  },
+  {
+   "at": "2026-09-22T18:31:13+00:00",
+   "action": "CREATE_CASE",
+   "route": "auto",
+   "status": "executed",
+   "detail": "case opened for C08623-K2"
+  },
+  {
+   "at": "2026-09-22T18:31:13+00:00",
+   "action": "VERIFY_WITH_CUSTOMER",
+   "route": "auto",
+   "status": "executed",
+   "detail": "verification request sent to holder of C08623-K2"
+  },
+  {
+   "at": "2026-09-22T18:31:13+00:00",
+   "action": "CLOSE_NO_FRAUD",
+   "route": "auto",
+   "status": "executed",
+   "detail": "alert on C08623-K2 closed as legitimate"
+  }
+ ],
+ "p_initial": 0.21,
+ "episode": [],
+ "flagged": {
+  "id": "3530164",
+  "amt": 49.0,
+  "ts": "2016-12-10 13:01:21",
+  "channel": "in_person",
+  "device": "",
+  "region": "330",
+  "risk_score": 0.4,
+  "p_model": 0.039034445228138995
+ }
+}

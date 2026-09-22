@@ -1,0 +1,180 @@
+{
+ "case_id": "HHG-009",
+ "trace": [
+  {
+   "step": 1,
+   "name": "trigger",
+   "detail": "customer_report: Customer C08299 message: 'I never made this $30.02 purchase. Please check my card.' Refers to 3581141.",
+   "tool_calls_so_far": 1
+  },
+  {
+   "step": 2,
+   "name": "card_profile",
+   "detail": "46 prior transactions on C08299-K1; median $49.97",
+   "tool_calls_so_far": 3
+  },
+  {
+   "step": 3,
+   "name": "cardholder_profile",
+   "detail": "behaviour profile C08299_203.0_179.0: 1 transactions",
+   "tool_calls_so_far": 4
+  },
+  {
+   "step": 4,
+   "name": "prior_cases",
+   "detail": "0 closed cases on this card, 0 on this device",
+   "tool_calls_so_far": 6
+  },
+  {
+   "step": 5,
+   "name": "detectors",
+   "detail": "amount_in_range(-0.3), fraud_proximity(+0.3), case_memory_model(+0.0)",
+   "tool_calls_so_far": 6
+  },
+  {
+   "step": 6,
+   "name": "assess",
+   "detail": "p=0.93, 2 fraud / 0 legitimate independent evidence, provisional pattern card_not_present_fraud, verdict fraud",
+   "tool_calls_so_far": 6
+  },
+  {
+   "step": 7,
+   "name": "policy",
+   "detail": "initial=['BLOCK_CARD', 'CREATE_CASE'] response=None final=['BLOCK_CARD', 'CREATE_CASE']",
+   "tool_calls_so_far": 6
+  },
+  {
+   "step": 8,
+   "name": "memory",
+   "detail": "retrieved closed cases ['CC-2527', 'CC-1512', 'CC-3230']; 1 earlier investigations in case memory",
+   "tool_calls_so_far": 7
+  },
+  {
+   "step": 9,
+   "name": "explain",
+   "detail": "summary and report narrative written (template)",
+   "tool_calls_so_far": 7
+  },
+  {
+   "step": 10,
+   "name": "execute",
+   "detail": "BLOCK_CARD:pending_approval, CREATE_CASE:executed",
+   "tool_calls_so_far": 7
+  },
+  {
+   "step": 11,
+   "name": "case_memory_write",
+   "detail": "INV-HHG-009 written to local case memory",
+   "tool_calls_so_far": 8
+  }
+ ],
+ "tool_log": [
+  {
+   "tool": "get_txn",
+   "params": {
+    "txn_id": 3581141
+   },
+   "rows": 1
+  },
+  {
+   "tool": "card_txns",
+   "params": {
+    "card_id": "C08299-K1",
+    "t_from": "2016-07-01 00:00:00",
+    "t_to": "2016-12-28 12:10:52"
+   },
+   "rows": 46
+  },
+  {
+   "tool": "card_txns",
+   "params": {
+    "card_id": "C08299-K1",
+    "t_from": "2016-12-21 12:10:53",
+    "t_to": "2016-12-28 17:10:53"
+   },
+   "rows": 2
+  },
+  {
+   "tool": "cardholder_txns",
+   "params": {
+    "uid": "C08299_203.0_179.0"
+   },
+   "rows": 1
+  },
+  {
+   "tool": "fraud_proximity",
+   "params": {
+    "card_id": "C08299-K1"
+   },
+   "rows": 3
+  },
+  {
+   "tool": "cases_by_card",
+   "params": {
+    "card_id": "C08299-K1"
+   },
+   "rows": 0
+  },
+  {
+   "tool": "case_memory",
+   "params": {
+    "pattern": "card_not_present_fraud",
+    "device": null
+   },
+   "rows": 1
+  },
+  {
+   "tool": "write_case(local)",
+   "params": {
+    "id": "INV-HHG-009"
+   },
+   "rows": 1
+  }
+ ],
+ "decision_history": [
+  {
+   "phase": "assessment",
+   "probability": 0.93,
+   "verdict": "fraud",
+   "recommended": [
+    "BLOCK_CARD",
+    "CREATE_CASE"
+   ]
+  },
+  {
+   "at": "2026-09-22T18:31:13+00:00",
+   "action": "BLOCK_CARD",
+   "route": "L1",
+   "status": "pending_approval",
+   "detail": "requires L1; no approval supplied"
+  },
+  {
+   "at": "2026-09-22T18:31:13+00:00",
+   "action": "CREATE_CASE",
+   "route": "auto",
+   "status": "executed",
+   "detail": "case opened for C08299-K1"
+  }
+ ],
+ "p_initial": 0.93,
+ "episode": [
+  {
+   "id": "3581141",
+   "amt": 30.020000457763672,
+   "channel": "online",
+   "ts": "2016-12-28 12:10:53",
+   "device": "NA | NA | NA | NA",
+   "addr1": "203"
+  }
+ ],
+ "flagged": {
+  "id": "3581141",
+  "amt": 30.020000457763672,
+  "ts": "2016-12-28 12:10:53",
+  "channel": "online",
+  "device": "NA | NA | NA | NA",
+  "region": "203",
+  "risk_score": 0.28,
+  "p_model": 0.8093405091360905
+ }
+}

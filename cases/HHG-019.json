@@ -1,0 +1,181 @@
+{
+  "case_id": "HHG-019",
+  "case": {
+    "status": "closed_fraud",
+    "verdict": "fraud",
+    "fraud_probability": 0.97,
+    "pattern": "undocumented",
+    "pattern_description": "Shared-device ring: one rare device profile (Windows | other | chrome 61.0 | 1280x720) makes online purchases on many unrelated cards in a short window, typically New to each account and behind a proxy. Found with the two-hop card\u2192device\u2192card traversal; it affects every cardholder whose card the ring holds.",
+    "affected_txn_ids": [
+      "3503878"
+    ],
+    "first_suspicious_txn_id": "3503878",
+    "connected_card_ids": [
+      "C06224-K2",
+      "C11309-K1"
+    ],
+    "connected_device_profiles": [
+      "Windows | other | chrome 61.0 | 1280x720"
+    ],
+    "exposure_usd": 99.92,
+    "evidence": [
+      {
+        "claim": "Device profile \"Windows | other | chrome 61.0 | 1280x720\" (used by only 5 customers in the whole dataset) appears on 3 cards between 2016-11-29 and 2016-12-01; 3 cards show near-identical amounts (~$99.92); same purchaser email domain (verizon.net) on most of them.",
+        "source": "graph",
+        "ref": "query:device_txns(d=\"Windows | other | chrome 61.0 | 1280x720\")",
+        "entity_ids": [
+          "C07987-K2",
+          "C06224-K2",
+          "C11309-K1"
+        ]
+      },
+      {
+        "claim": "Device profile \"Windows | other | chrome 61.0 | 1280x720\" is marked New and has never been seen on this card (57 prior online transactions)",
+        "source": "graph",
+        "ref": "query:card_txns(c=C07987-K2)",
+        "entity_ids": [
+          "3503878"
+        ]
+      },
+      {
+        "claim": "$99.92 is within the card's normal range (median $116.92, 90th percentile $445.05)",
+        "source": "graph",
+        "ref": "query:card_txns(c=C07987-K2)",
+        "entity_ids": [
+          "3503878"
+        ]
+      },
+      {
+        "claim": "4 confirmed-fraud closed case(s) within two hops of this card through shared rare device profiles in the last 30 days (CC-2800, CC-5377, CC-5381, CC-5528)",
+        "source": "graph",
+        "ref": "query:fraud_proximity",
+        "entity_ids": [
+          "C07987-K2",
+          "CC-2800",
+          "CC-5377",
+          "CC-5381",
+          "CC-5528"
+        ]
+      },
+      {
+        "claim": "Case-memory model (trained on 5,565 closed cases) scores the flagged transaction 0.48; bank risk score 0.90",
+        "source": "external",
+        "ref": "model:case_memory_lgbm",
+        "entity_ids": [
+          "3503878"
+        ]
+      },
+      {
+        "claim": "4 earlier closed case(s) on this card (3 confirmed fraud)",
+        "source": "graph",
+        "ref": "query:cases_by_card",
+        "entity_ids": [
+          "CC-2011",
+          "CC-2087",
+          "CC-2860",
+          "CC-5026"
+        ]
+      },
+      {
+        "claim": "Policy R6 applied",
+        "source": "document",
+        "ref": "rag/fraud_policy.md#R6",
+        "entity_ids": []
+      },
+      {
+        "claim": "Policy R9 applied",
+        "source": "document",
+        "ref": "rag/fraud_policy.md#R9",
+        "entity_ids": []
+      }
+    ],
+    "similar_prior_cases": [
+      "CC-2971",
+      "CC-3035",
+      "CC-2985",
+      "CC-5026"
+    ],
+    "summary": "Fraud (undocumented) on card C07987-K2 (risk score): Real-time model scored transaction 3503878 ($99.92, online) at 0.90. Device profile \"Windows | other | chrome 61.0 | 1280x720\" (used by only 5 customers in the whole dataset) appears on 3 cards between 2016-11-29 and 2016-12-01; 3 cards show near-identical amounts (~$99.92); same purchaser email domain (verizon.net) on most of them. Device profile \"Windows | other | chrome 61.0 | 1280x720\" is marked New and has never been seen on this card (57 prior online transactions). Final probability 0.97; exposure $99.92; actions: BLOCK_CARD, CREATE_CASE, FILE_REPORT, MONITOR_CONNECTED_CARDS, ESCALATE_TO_ANALYST.",
+    "written_to_graph": false,
+    "graph_case_id": "INV-HHG-019"
+  },
+  "evidence_requests": [],
+  "next_best_actions": {
+    "initial": [
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "Fraud confirmed by graph evidence (\u00a76 stopping threshold met); exposure $99.92 (\u2264 $2,500)"
+      },
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "\u00a73a: record the investigation and write it to the graph"
+      },
+      {
+        "action": "FILE_REPORT",
+        "route": "L2",
+        "reason": "\u00a73a: activity connects to a shared device profile / other cards (R6); coordinated / undocumented pattern (R9)"
+      },
+      {
+        "action": "MONITOR_CONNECTED_CARDS",
+        "route": "auto",
+        "reason": "R6: monitor every card sharing the device profile"
+      },
+      {
+        "action": "ESCALATE_TO_ANALYST",
+        "route": "auto",
+        "reason": "R9: undocumented pattern \u2014 hand to an analyst with evidence"
+      }
+    ],
+    "final": [
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "Fraud confirmed by graph evidence (\u00a76 stopping threshold met); exposure $99.92 (\u2264 $2,500)"
+      },
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "\u00a73a: record the investigation and write it to the graph"
+      },
+      {
+        "action": "FILE_REPORT",
+        "route": "L2",
+        "reason": "\u00a73a: activity connects to a shared device profile / other cards (R6); coordinated / undocumented pattern (R9)"
+      },
+      {
+        "action": "MONITOR_CONNECTED_CARDS",
+        "route": "auto",
+        "reason": "R6: monitor every card sharing the device profile"
+      },
+      {
+        "action": "ESCALATE_TO_ANALYST",
+        "route": "auto",
+        "reason": "R9: undocumented pattern \u2014 hand to an analyst with evidence"
+      }
+    ],
+    "what_changed": "nothing"
+  },
+  "sar": {
+    "file": true,
+    "reason": "File under \u00a73a: fraud confirmed/strongly suspected and activity connects to a shared device profile and other cardholders (R6); coordinated / undocumented pattern (R9).",
+    "narrative": "Subject: customer C07987, card C07987-K2. Between 2016-12-01 17:28 and 2016-12-01 17:28, 1 transaction(s) totalling $99.92 were identified as unauthorised: 3503878 ($99.92 online, 2016-12-01 17:28, device \"Windows | other | chrome 61.0 | 1280x720\", region 264). The alert was raised by risk score: Real-time model scored transaction 3503878 ($99.92, online) at 0.90. Review and decide. Method: Shared-device ring: one rare device profile (Windows | other | chrome 61.0 | 1280x720) makes online purchases on many unrelated cards in a short window, typically New to each account and behind a proxy. Found with the two-hop card\u2192device\u2192card traversal; it affects every cardholder whose card the ring holds. Device profile \"Windows | other | chrome 61.0 | 1280x720\" (used by only 5 customers in the whole dataset) appears on 3 cards between 2016-11-29 and 2016-12-01; 3 cards show near-identical amounts (~$99.92); same purchaser email domain (verizon.net) on most of them. Device profile \"Windows | other | chrome 61.0 | 1280x720\" is marked New and has never been seen on this card (57 prior online transactions). 4 confirmed-fraud closed case(s) within two hops of this card through shared rare device profiles in the last 30 days (CC-2800, CC-5377, CC-5381, CC-5528). The same origin links the activity to 2 other card(s), including C06224-K2, C11309-K1, indicating a common actor across cardholders. The method matches previously confirmed bank cases CC-2971, CC-3035, CC-2985, CC-5026. Why suspicious: the activity is inconsistent with the cardholder's established behaviour and matches a fraud typology corroborated by independent graph evidence. Actions: BLOCK_CARD, CREATE_CASE, FILE_REPORT, MONITOR_CONNECTED_CARDS, ESCALATE_TO_ANALYST.",
+    "subjects": [
+      "C07987",
+      "C07987-K2",
+      "C06224-K2",
+      "C11309-K1",
+      "Windows | other | chrome 61.0 | 1280x720"
+    ],
+    "total_amount_usd": 99.92,
+    "activity_dates": [
+      "2016-12-01",
+      "2016-12-01"
+    ]
+  },
+  "stop_reason": "Probability 0.97 \u2265 0.85 with 2 independent pieces of evidence (\u00a76); episode, connected cards and report decision complete.",
+  "tool_calls": 11,
+  "tokens": 0,
+  "latency_s": 0.03
+}

@@ -1,0 +1,189 @@
+{
+ "case_id": "HHG-008",
+ "trace": [
+  {
+   "step": 1,
+   "name": "trigger",
+   "detail": "customer_report: Customer C13171 message: 'I never made this $55.68 purchase. Please check my card.' Refers to 3558054.",
+   "tool_calls_so_far": 1
+  },
+  {
+   "step": 2,
+   "name": "card_profile",
+   "detail": "899 prior transactions on C13171-K2; median $39.37",
+   "tool_calls_so_far": 3
+  },
+  {
+   "step": 3,
+   "name": "cardholder_profile",
+   "detail": "behaviour profile nan: 0 transactions",
+   "tool_calls_so_far": 3
+  },
+  {
+   "step": 4,
+   "name": "prior_cases",
+   "detail": "19 closed cases on this card, 0 on this device",
+   "tool_calls_so_far": 5
+  },
+  {
+   "step": 5,
+   "name": "detectors",
+   "detail": "repeat_charge_burst(+2.0), device_known(-0.8), amount_in_range(-0.3), fraud_proximity(+0.3), case_memory_model(+0.0)",
+   "tool_calls_so_far": 5
+  },
+  {
+   "step": 6,
+   "name": "assess",
+   "detail": "p=0.99, 3 fraud / 1 legitimate independent evidence, provisional pattern card_not_present_fraud, verdict fraud",
+   "tool_calls_so_far": 5
+  },
+  {
+   "step": 7,
+   "name": "policy",
+   "detail": "initial=['BLOCK_CARD', 'CREATE_CASE'] response=None final=['BLOCK_CARD', 'CREATE_CASE']",
+   "tool_calls_so_far": 5
+  },
+  {
+   "step": 8,
+   "name": "memory",
+   "detail": "retrieved closed cases ['CC-5099', 'CC-1180', 'CC-1223', 'CC-5010']; 0 earlier investigations in case memory",
+   "tool_calls_so_far": 6
+  },
+  {
+   "step": 9,
+   "name": "explain",
+   "detail": "summary and report narrative written (template)",
+   "tool_calls_so_far": 6
+  },
+  {
+   "step": 10,
+   "name": "execute",
+   "detail": "BLOCK_CARD:pending_approval, CREATE_CASE:executed",
+   "tool_calls_so_far": 6
+  },
+  {
+   "step": 11,
+   "name": "case_memory_write",
+   "detail": "INV-HHG-008 written to local case memory",
+   "tool_calls_so_far": 7
+  }
+ ],
+ "tool_log": [
+  {
+   "tool": "get_txn",
+   "params": {
+    "txn_id": 3558054
+   },
+   "rows": 1
+  },
+  {
+   "tool": "card_txns",
+   "params": {
+    "card_id": "C13171-K2",
+    "t_from": "2016-07-01 00:00:00",
+    "t_to": "2016-12-19 22:08:55"
+   },
+   "rows": 899
+  },
+  {
+   "tool": "card_txns",
+   "params": {
+    "card_id": "C13171-K2",
+    "t_from": "2016-12-12 22:08:56",
+    "t_to": "2016-12-20 03:08:56"
+   },
+   "rows": 48
+  },
+  {
+   "tool": "fraud_proximity",
+   "params": {
+    "card_id": "C13171-K2"
+   },
+   "rows": 49
+  },
+  {
+   "tool": "cases_by_card",
+   "params": {
+    "card_id": "C13171-K2"
+   },
+   "rows": 19
+  },
+  {
+   "tool": "case_memory",
+   "params": {
+    "pattern": "card_not_present_fraud",
+    "device": null
+   },
+   "rows": 0
+  },
+  {
+   "tool": "write_case(local)",
+   "params": {
+    "id": "INV-HHG-008"
+   },
+   "rows": 1
+  }
+ ],
+ "decision_history": [
+  {
+   "phase": "assessment",
+   "probability": 0.99,
+   "verdict": "fraud",
+   "recommended": [
+    "BLOCK_CARD",
+    "CREATE_CASE"
+   ]
+  },
+  {
+   "at": "2026-09-22T18:31:13+00:00",
+   "action": "BLOCK_CARD",
+   "route": "L1",
+   "status": "pending_approval",
+   "detail": "requires L1; no approval supplied"
+  },
+  {
+   "at": "2026-09-22T18:31:13+00:00",
+   "action": "CREATE_CASE",
+   "route": "auto",
+   "status": "executed",
+   "detail": "case opened for C13171-K2"
+  }
+ ],
+ "p_initial": 0.99,
+ "episode": [
+  {
+   "id": "3557979",
+   "amt": 55.599998474121094,
+   "channel": "online",
+   "ts": "2016-12-19 21:48:32",
+   "device": "NA | NA | chrome 66.0 | NA",
+   "addr1": ""
+  },
+  {
+   "id": "3557987",
+   "amt": 55.689998626708984,
+   "channel": "online",
+   "ts": "2016-12-19 21:50:54",
+   "device": "NA | NA | chrome 66.0 | NA",
+   "addr1": ""
+  },
+  {
+   "id": "3558054",
+   "amt": 55.68000030517578,
+   "channel": "online",
+   "ts": "2016-12-19 22:08:56",
+   "device": "NA | NA | chrome 66.0 | NA",
+   "addr1": ""
+  }
+ ],
+ "flagged": {
+  "id": "3558054",
+  "amt": 55.68000030517578,
+  "ts": "2016-12-19 22:08:56",
+  "channel": "online",
+  "device": "NA | NA | chrome 66.0 | NA",
+  "region": "",
+  "risk_score": 0.38,
+  "p_model": 0.947487056578188
+ }
+}

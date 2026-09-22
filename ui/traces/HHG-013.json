@@ -1,0 +1,198 @@
+{
+ "case_id": "HHG-013",
+ "trace": [
+  {
+   "step": 1,
+   "name": "trigger",
+   "detail": "risk_score: Real-time model scored transaction 3526826 ($35.66, online) at 0.76. Review and decide.",
+   "tool_calls_so_far": 1
+  },
+  {
+   "step": 2,
+   "name": "card_profile",
+   "detail": "1431 prior transactions on C07671-K2; median $59.08",
+   "tool_calls_so_far": 3
+  },
+  {
+   "step": 3,
+   "name": "cardholder_profile",
+   "detail": "behaviour profile nan: 0 transactions",
+   "tool_calls_so_far": 3
+  },
+  {
+   "step": 4,
+   "name": "device_neighbourhood",
+   "detail": "profile used by 253 customers overall; 0 cards in the 14-day window",
+   "tool_calls_so_far": 4
+  },
+  {
+   "step": 5,
+   "name": "prior_cases",
+   "detail": "4 closed cases on this card, 0 on this device",
+   "tool_calls_so_far": 6
+  },
+  {
+   "step": 6,
+   "name": "detectors",
+   "detail": "new_device(+0.6), new_product(+0.4), amount_in_range(-0.3), fraud_proximity(+0.0), case_memory_model(+0.0)",
+   "tool_calls_so_far": 6
+  },
+  {
+   "step": 7,
+   "name": "assess",
+   "detail": "p=0.09, 2 fraud / 1 legitimate independent evidence, provisional pattern card_not_present_new_device, verdict legitimate",
+   "tool_calls_so_far": 6
+  },
+  {
+   "step": 8,
+   "name": "policy",
+   "detail": "initial=['CREATE_CASE', 'VERIFY_WITH_CUSTOMER'] response=confirm final=['CLOSE_NO_FRAUD']",
+   "tool_calls_so_far": 6
+  },
+  {
+   "step": 9,
+   "name": "memory",
+   "detail": "retrieved closed cases ['CC-4397', 'CC-4021', 'CC-4294']; 0 earlier investigations in case memory",
+   "tool_calls_so_far": 7
+  },
+  {
+   "step": 10,
+   "name": "explain",
+   "detail": "summary and report narrative written (template)",
+   "tool_calls_so_far": 7
+  },
+  {
+   "step": 11,
+   "name": "execute",
+   "detail": "CREATE_CASE:executed, VERIFY_WITH_CUSTOMER:executed, CLOSE_NO_FRAUD:executed",
+   "tool_calls_so_far": 7
+  },
+  {
+   "step": 12,
+   "name": "case_memory_write",
+   "detail": "INV-HHG-013 written to local case memory",
+   "tool_calls_so_far": 8
+  }
+ ],
+ "tool_log": [
+  {
+   "tool": "get_txn",
+   "params": {
+    "txn_id": 3526826
+   },
+   "rows": 1
+  },
+  {
+   "tool": "card_txns",
+   "params": {
+    "card_id": "C07671-K2",
+    "t_from": "2016-07-01 00:00:00",
+    "t_to": "2016-12-09 02:39:28"
+   },
+   "rows": 1431
+  },
+  {
+   "tool": "card_txns",
+   "params": {
+    "card_id": "C07671-K2",
+    "t_from": "2016-12-02 02:39:29",
+    "t_to": "2016-12-09 05:39:29"
+   },
+   "rows": 75
+  },
+  {
+   "tool": "device_footprint",
+   "params": {
+    "device": "Windows | NA | chrome 66.0 | NA"
+   },
+   "rows": 1
+  },
+  {
+   "tool": "fraud_proximity",
+   "params": {
+    "card_id": "C07671-K2"
+   },
+   "rows": 1
+  },
+  {
+   "tool": "cases_by_card",
+   "params": {
+    "card_id": "C07671-K2"
+   },
+   "rows": 4
+  },
+  {
+   "tool": "case_memory",
+   "params": {
+    "pattern": "none",
+    "device": "Windows | NA | chrome 66.0 | NA"
+   },
+   "rows": 9
+  },
+  {
+   "tool": "write_case(local)",
+   "params": {
+    "id": "INV-HHG-013"
+   },
+   "rows": 1
+  }
+ ],
+ "decision_history": [
+  {
+   "phase": "assessment",
+   "probability": 0.09,
+   "verdict": "legitimate",
+   "recommended": [
+    "CREATE_CASE",
+    "VERIFY_WITH_CUSTOMER"
+   ]
+  },
+  {
+   "phase": "evidence_request",
+   "type": "customer_validation",
+   "response": "confirm",
+   "detail": "Customer confirms they made the purchase from a new phone/computer (simulated: response chosen to be consistent with the pre-request evidence, assessed probability 0.09)"
+  },
+  {
+   "phase": "reassessment",
+   "probability": 0.08,
+   "verdict": "legitimate",
+   "recommended": [
+    "CLOSE_NO_FRAUD"
+   ]
+  },
+  {
+   "at": "2026-09-22T18:31:13+00:00",
+   "action": "CREATE_CASE",
+   "route": "auto",
+   "status": "executed",
+   "detail": "case opened for C07671-K2"
+  },
+  {
+   "at": "2026-09-22T18:31:13+00:00",
+   "action": "VERIFY_WITH_CUSTOMER",
+   "route": "auto",
+   "status": "executed",
+   "detail": "verification request sent to holder of C07671-K2"
+  },
+  {
+   "at": "2026-09-22T18:31:13+00:00",
+   "action": "CLOSE_NO_FRAUD",
+   "route": "auto",
+   "status": "executed",
+   "detail": "alert on C07671-K2 closed as legitimate"
+  }
+ ],
+ "p_initial": 0.09,
+ "episode": [],
+ "flagged": {
+  "id": "3526826",
+  "amt": 35.65999984741211,
+  "ts": "2016-12-09 02:39:29",
+  "channel": "online",
+  "device": "Windows | NA | chrome 66.0 | NA",
+  "region": "",
+  "risk_score": 0.76,
+  "p_model": 0.022728786920723693
+ }
+}

@@ -1,0 +1,88 @@
+{
+  "case_id": "HHG-012",
+  "case": {
+    "status": "closed_legitimate",
+    "verdict": "legitimate",
+    "fraud_probability": 0.01,
+    "pattern": "none",
+    "pattern_description": "",
+    "affected_txn_ids": [],
+    "first_suspicious_txn_id": "",
+    "connected_card_ids": [],
+    "connected_device_profiles": [],
+    "exposure_usd": 0.0,
+    "evidence": [
+      {
+        "claim": "$30.91 is within the card's normal range (median $49.08, 90th percentile $161.01)",
+        "source": "graph",
+        "ref": "query:card_txns(c=C05876-K2)",
+        "entity_ids": [
+          "3553342"
+        ]
+      },
+      {
+        "claim": "Billing region 494 has 21 prior card-present transactions on this card",
+        "source": "graph",
+        "ref": "query:card_txns(c=C05876-K2)",
+        "entity_ids": [
+          "3553342"
+        ]
+      },
+      {
+        "claim": "Case-memory model (trained on 5,565 closed cases) scores the flagged transaction 0.00; bank risk score 0.55",
+        "source": "external",
+        "ref": "model:case_memory_lgbm",
+        "entity_ids": [
+          "3553342"
+        ]
+      },
+      {
+        "claim": "2 earlier closed case(s) on this card (1 confirmed fraud)",
+        "source": "graph",
+        "ref": "query:cases_by_card",
+        "entity_ids": [
+          "CC-0003",
+          "CC-2370"
+        ]
+      }
+    ],
+    "similar_prior_cases": [
+      "CC-2850",
+      "CC-2749",
+      "CC-2370"
+    ],
+    "summary": "Legitimate activity on card C05876-K2 (risk score): Real-time model scored transaction 3553342 ($30.91, in billing region 494.0) at 0.55. $30.91 is within the card's normal range (median $49.08, 90th percentile $161.01). Billing region 494 has 21 prior card-present transactions on this card. Final probability 0.01; exposure $0.00; actions: CLOSE_NO_FRAUD.",
+    "written_to_graph": false,
+    "graph_case_id": "INV-HHG-012"
+  },
+  "evidence_requests": [],
+  "next_best_actions": {
+    "initial": [
+      {
+        "action": "CLOSE_NO_FRAUD",
+        "route": "auto",
+        "reason": "\u00a76 stopping: probability 0.01 with 2 independent pieces of legitimate evidence; no rule calls for verification"
+      }
+    ],
+    "final": [
+      {
+        "action": "CLOSE_NO_FRAUD",
+        "route": "auto",
+        "reason": "\u00a76 stopping: probability 0.01 with 2 independent pieces of legitimate evidence; no rule calls for verification"
+      }
+    ],
+    "what_changed": "nothing"
+  },
+  "sar": {
+    "file": false,
+    "reason": "No report: verdict is legitimate; \u00a73a requires confirmed or strongly suspected fraud.",
+    "narrative": "",
+    "subjects": [],
+    "total_amount_usd": 0,
+    "activity_dates": []
+  },
+  "stop_reason": "Probability 0.01 \u2264 0.15 supported by 2 independent pieces of evidence (\u00a76). Further steps would not change the decision.",
+  "tool_calls": 8,
+  "tokens": 0,
+  "latency_s": 0.02
+}

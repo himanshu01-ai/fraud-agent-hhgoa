@@ -1,0 +1,233 @@
+{
+ "case_id": "HHG-019",
+ "trace": [
+  {
+   "step": 1,
+   "name": "trigger",
+   "detail": "risk_score: Real-time model scored transaction 3503878 ($99.92, online) at 0.90. Review and decide.",
+   "tool_calls_so_far": 1
+  },
+  {
+   "step": 2,
+   "name": "card_profile",
+   "detail": "219 prior transactions on C07987-K2; median $116.92",
+   "tool_calls_so_far": 3
+  },
+  {
+   "step": 3,
+   "name": "cardholder_profile",
+   "detail": "behaviour profile C07987_264.0_152.0: 1 transactions",
+   "tool_calls_so_far": 4
+  },
+  {
+   "step": 4,
+   "name": "device_neighbourhood",
+   "detail": "profile used by 5 customers overall; 3 cards in the 14-day window",
+   "tool_calls_so_far": 7
+  },
+  {
+   "step": 5,
+   "name": "prior_cases",
+   "detail": "4 closed cases on this card, 0 on this device",
+   "tool_calls_so_far": 9
+  },
+  {
+   "step": 6,
+   "name": "detectors",
+   "detail": "shared_device_ring(+3.5), new_device(+0.6), amount_in_range(-0.3), fraud_proximity(+0.3), case_memory_model(+0.0)",
+   "tool_calls_so_far": 9
+  },
+  {
+   "step": 7,
+   "name": "assess",
+   "detail": "p=0.97, 2 fraud / 0 legitimate independent evidence, provisional pattern undocumented, verdict fraud",
+   "tool_calls_so_far": 9
+  },
+  {
+   "step": 8,
+   "name": "policy",
+   "detail": "initial=['BLOCK_CARD', 'CREATE_CASE', 'FILE_REPORT', 'MONITOR_CONNECTED_CARDS', 'ESCALATE_TO_ANALYST'] response=None final=['BLOCK_CARD', 'CREATE_CASE', 'FILE_REPORT', 'MONITOR_CONNECTED_CARDS', 'ESCALATE_TO_ANALYST']",
+   "tool_calls_so_far": 9
+  },
+  {
+   "step": 9,
+   "name": "memory",
+   "detail": "retrieved closed cases ['CC-2971', 'CC-3035', 'CC-2985', 'CC-5026']; 0 earlier investigations in case memory",
+   "tool_calls_so_far": 10
+  },
+  {
+   "step": 10,
+   "name": "explain",
+   "detail": "summary and report narrative written (template)",
+   "tool_calls_so_far": 10
+  },
+  {
+   "step": 11,
+   "name": "execute",
+   "detail": "BLOCK_CARD:pending_approval, CREATE_CASE:executed, FILE_REPORT:pending_approval, MONITOR_CONNECTED_CARDS:executed, ESCALATE_TO_ANALYST:executed",
+   "tool_calls_so_far": 10
+  },
+  {
+   "step": 12,
+   "name": "case_memory_write",
+   "detail": "INV-HHG-019 written to local case memory",
+   "tool_calls_so_far": 11
+  }
+ ],
+ "tool_log": [
+  {
+   "tool": "get_txn",
+   "params": {
+    "txn_id": 3503878
+   },
+   "rows": 1
+  },
+  {
+   "tool": "card_txns",
+   "params": {
+    "card_id": "C07987-K2",
+    "t_from": "2016-07-01 00:00:00",
+    "t_to": "2016-12-01 17:28:52"
+   },
+   "rows": 219
+  },
+  {
+   "tool": "card_txns",
+   "params": {
+    "card_id": "C07987-K2",
+    "t_from": "2016-11-24 17:28:53",
+    "t_to": "2016-12-01 22:28:53"
+   },
+   "rows": 4
+  },
+  {
+   "tool": "cardholder_txns",
+   "params": {
+    "uid": "C07987_264.0_152.0"
+   },
+   "rows": 1
+  },
+  {
+   "tool": "device_footprint",
+   "params": {
+    "device": "Windows | other | chrome 61.0 | 1280x720"
+   },
+   "rows": 1
+  },
+  {
+   "tool": "device_txns",
+   "params": {
+    "device": "Windows | other | chrome 61.0 | 1280x720",
+    "t_from": "2016-11-17 17:28:53",
+    "t_to": "2016-12-01 22:28:53"
+   },
+   "rows": 3
+  },
+  {
+   "tool": "cases_by_device",
+   "params": {
+    "device": "Windows | other | chrome 61.0 | 1280x720"
+   },
+   "rows": 0
+  },
+  {
+   "tool": "fraud_proximity",
+   "params": {
+    "card_id": "C07987-K2"
+   },
+   "rows": 4
+  },
+  {
+   "tool": "cases_by_card",
+   "params": {
+    "card_id": "C07987-K2"
+   },
+   "rows": 4
+  },
+  {
+   "tool": "case_memory",
+   "params": {
+    "pattern": "undocumented",
+    "device": "Windows | other | chrome 61.0 | 1280x720"
+   },
+   "rows": 2
+  },
+  {
+   "tool": "write_case(local)",
+   "params": {
+    "id": "INV-HHG-019"
+   },
+   "rows": 1
+  }
+ ],
+ "decision_history": [
+  {
+   "phase": "assessment",
+   "probability": 0.97,
+   "verdict": "fraud",
+   "recommended": [
+    "BLOCK_CARD",
+    "CREATE_CASE",
+    "FILE_REPORT",
+    "MONITOR_CONNECTED_CARDS",
+    "ESCALATE_TO_ANALYST"
+   ]
+  },
+  {
+   "at": "2026-09-22T18:31:13+00:00",
+   "action": "BLOCK_CARD",
+   "route": "L1",
+   "status": "pending_approval",
+   "detail": "requires L1; no approval supplied"
+  },
+  {
+   "at": "2026-09-22T18:31:13+00:00",
+   "action": "CREATE_CASE",
+   "route": "auto",
+   "status": "executed",
+   "detail": "case opened for C07987-K2"
+  },
+  {
+   "at": "2026-09-22T18:31:13+00:00",
+   "action": "FILE_REPORT",
+   "route": "L2",
+   "status": "pending_approval",
+   "detail": "requires L2; no approval supplied"
+  },
+  {
+   "at": "2026-09-22T18:31:13+00:00",
+   "action": "MONITOR_CONNECTED_CARDS",
+   "route": "auto",
+   "status": "executed",
+   "detail": "connected cards of C07987-K2 added to watch-list"
+  },
+  {
+   "at": "2026-09-22T18:31:13+00:00",
+   "action": "ESCALATE_TO_ANALYST",
+   "route": "auto",
+   "status": "executed",
+   "detail": "case for C07987-K2 placed in analyst queue"
+  }
+ ],
+ "p_initial": 0.97,
+ "episode": [
+  {
+   "id": "3503878",
+   "amt": 99.91999816894531,
+   "channel": "online",
+   "ts": "2016-12-01 17:28:53",
+   "device": "Windows | other | chrome 61.0 | 1280x720",
+   "addr1": "264"
+  }
+ ],
+ "flagged": {
+  "id": "3503878",
+  "amt": 99.91999816894531,
+  "ts": "2016-12-01 17:28:53",
+  "channel": "online",
+  "device": "Windows | other | chrome 61.0 | 1280x720",
+  "region": "264",
+  "risk_score": 0.9,
+  "p_model": 0.4849088695755431
+ }
+}
