@@ -1,0 +1,187 @@
+{
+  "case_id": "MON-001",
+  "case": {
+    "status": "closed_fraud",
+    "verdict": "fraud",
+    "fraud_probability": 0.95,
+    "pattern": "card_not_present_new_device",
+    "pattern_description": "",
+    "affected_txn_ids": [
+      "3428195"
+    ],
+    "first_suspicious_txn_id": "3428195",
+    "connected_card_ids": [
+      "C05031-K2",
+      "C11923-K2"
+    ],
+    "connected_device_profiles": [
+      "F3213 Build/36.1.A.1.86 | NA | chrome 65.0 for android | NA"
+    ],
+    "exposure_usd": 33.07,
+    "evidence": [
+      {
+        "claim": "Device profile \"F3213 Build/36.1.A.1.86 | NA | chrome 65.0 for android | NA\" (used by only 12 customers in the whole dataset) appears on 3 cards between 2016-10-26 and 2016-11-04; 100% of those transactions mark the device New to the account.",
+        "source": "graph",
+        "ref": "query:device_txns(d=\"F3213 Build/36.1.A.1.86 | NA | chrome 65.0 for android | NA\")",
+        "entity_ids": [
+          "C11597-K2",
+          "C05031-K2",
+          "C11923-K2"
+        ]
+      },
+      {
+        "claim": "Device profile \"F3213 Build/36.1.A.1.86 | NA | chrome 65.0 for android | NA\" is marked New and has never been seen on this card (652 prior online transactions)",
+        "source": "graph",
+        "ref": "query:card_txns(c=C11597-K2)",
+        "entity_ids": [
+          "3428195"
+        ]
+      },
+      {
+        "claim": "$33.07 is within the card's normal range (median $30.24, 90th percentile $80.52)",
+        "source": "graph",
+        "ref": "query:card_txns(c=C11597-K2)",
+        "entity_ids": [
+          "3428195"
+        ]
+      },
+      {
+        "claim": "128 confirmed-fraud closed case(s) within two hops of this card through shared rare device profiles in the last 30 days (CC-0497, CC-0503, CC-0700, CC-1195, CC-1217, CC-1305)",
+        "source": "graph",
+        "ref": "query:fraud_proximity",
+        "entity_ids": [
+          "C11597-K2",
+          "CC-0497",
+          "CC-0503",
+          "CC-0700",
+          "CC-1195",
+          "CC-1217",
+          "CC-1305"
+        ]
+      },
+      {
+        "claim": "Case-memory model (trained on 5,565 closed cases) scores the flagged transaction 0.05; bank risk score 0.72",
+        "source": "external",
+        "ref": "model:case_memory_lgbm",
+        "entity_ids": [
+          "3428195"
+        ]
+      },
+      {
+        "claim": "22 earlier closed case(s) on this card (21 confirmed fraud)",
+        "source": "graph",
+        "ref": "query:cases_by_card",
+        "entity_ids": [
+          "CC-4879",
+          "CC-4984",
+          "CC-5215",
+          "CC-5400",
+          "CC-5552"
+        ]
+      },
+      {
+        "claim": "Customer states they did not make the purchase and still holds the card",
+        "source": "customer",
+        "ref": "evidence_request:1",
+        "entity_ids": []
+      },
+      {
+        "claim": "Policy R1 applied",
+        "source": "document",
+        "ref": "knowledge/fraud_policy.md#R1",
+        "entity_ids": []
+      },
+      {
+        "claim": "Policy R2 applied",
+        "source": "document",
+        "ref": "knowledge/fraud_policy.md#R2",
+        "entity_ids": []
+      },
+      {
+        "claim": "Policy R6 applied",
+        "source": "document",
+        "ref": "knowledge/fraud_policy.md#R6",
+        "entity_ids": []
+      }
+    ],
+    "similar_prior_cases": [
+      "CC-5482",
+      "CC-5378",
+      "CC-5146",
+      "CC-5552"
+    ],
+    "summary": "Fraud (card not present new device) on card C11597-K2 (analyst request): Monitor: device profile \"F3213 Build/36.1.A.1.86 | NA | chrome 65.0 for android | NA\" hit 3 cards between 2016-11-01 and 2016-11-08. Device profile \"F3213 Build/36.1.A.1.86 | NA | chrome 65.0 for android | NA\" (used by only 12 customers in the whole dataset) appears on 3 cards between 2016-10-26 and 2016-11-04; 100% of those transactions mark the device New to the account. Device profile \"F3213 Build/36.1.A.1.86 | NA | chrome 65.0 for android | NA\" is marked New and has never been seen on this card (652 prior online transactions). Evidence requested; assumed response: Customer states they did not make the purchase and still holds the card. Final probability 0.95; exposure $33.07; actions: BLOCK_CARD, CREATE_CASE, FILE_REPORT, MONITOR_CONNECTED_CARDS.",
+    "written_to_graph": false,
+    "graph_case_id": "INV-MON-001"
+  },
+  "evidence_requests": [
+    {
+      "type": "customer_validation",
+      "asked_after_step": 7,
+      "assumed_response": "Customer states they did not make the purchase and still holds the card (simulated: response chosen to be consistent with the pre-request evidence, assessed probability 0.84)"
+    }
+  ],
+  "next_best_actions": {
+    "initial": [
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "\u00a73a: evidence is being requested / customer dispute \u2014 open a case"
+      },
+      {
+        "action": "VERIFY_WITH_CUSTOMER",
+        "route": "auto",
+        "reason": "R1: assessed probability 0.84 < 0.70 on weak / single-signal evidence \u2014 verify before any block"
+      },
+      {
+        "action": "STEP_UP_AUTH",
+        "route": "auto",
+        "reason": "R1: hold further online activity behind a one-time passcode while verification is pending"
+      }
+    ],
+    "final": [
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "R2: customer denies the transaction; exposure $33.07 (\u2264 $2,500)"
+      },
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "R2 / \u00a73a: record the investigation and write it to the graph"
+      },
+      {
+        "action": "FILE_REPORT",
+        "route": "L2",
+        "reason": "\u00a73a: activity connects to a shared device profile / other cards (R6)"
+      },
+      {
+        "action": "MONITOR_CONNECTED_CARDS",
+        "route": "auto",
+        "reason": "R6: monitor every card sharing the device profile"
+      }
+    ],
+    "what_changed": "Customer denied the transaction: probability moved from 0.84 to 0.95 and the recommendation changed from CREATE_CASE, VERIFY_WITH_CUSTOMER, STEP_UP_AUTH to BLOCK_CARD, CREATE_CASE, FILE_REPORT, MONITOR_CONNECTED_CARDS."
+  },
+  "sar": {
+    "file": true,
+    "reason": "File under \u00a73a: fraud confirmed/strongly suspected and activity connects to a shared device profile and other cardholders (R6).",
+    "narrative": "Subject: customer C11597, card C11597-K2. Between 2016-11-04 02:13 and 2016-11-04 02:13, 1 transaction(s) totalling $33.07 were identified as unauthorised: 3428195 ($33.07 online, 2016-11-04 02:13, device \"F3213 Build/36.1.A.1.86 | NA | chrome 65.0 for android | NA\"). The alert was raised by analyst request: Monitor: device profile \"F3213 Build/36.1.A.1.86 | NA | chrome 65.0 for android | NA\" hit 3 cards between 2016-11-01 and 2016-11-08. Review transaction 3428195. Device profile \"F3213 Build/36.1.A.1.86 | NA | chrome 65.0 for android | NA\" (used by only 12 customers in the whole dataset) appears on 3 cards between 2016-10-26 and 2016-11-04; 100% of those transactions mark the device New to the account. Device profile \"F3213 Build/36.1.A.1.86 | NA | chrome 65.0 for android | NA\" is marked New and has never been seen on this card (652 prior online transactions). 128 confirmed-fraud closed case(s) within two hops of this card through shared rare device profiles in the last 30 days (CC-0497, CC-0503, CC-0700, CC-1195, CC-1217, CC-1305). The same origin links the activity to 2 other card(s), including C05031-K2, C11923-K2, indicating a common actor across cardholders. The method matches previously confirmed bank cases CC-5482, CC-5378, CC-5146, CC-5552. The cardholder stated they did not authorise the transaction(s) and retains the card. Why suspicious: the activity is inconsistent with the cardholder's established behaviour and matches a fraud typology corroborated by independent graph evidence. Actions: BLOCK_CARD, CREATE_CASE, FILE_REPORT, MONITOR_CONNECTED_CARDS.",
+    "subjects": [
+      "C11597",
+      "C11597-K2",
+      "C05031-K2",
+      "C11923-K2",
+      "F3213 Build/36.1.A.1.86 | NA | chrome 65.0 for android | NA"
+    ],
+    "total_amount_usd": 33.07,
+    "activity_dates": [
+      "2016-11-04",
+      "2016-11-04"
+    ]
+  },
+  "stop_reason": "Customer denial settles the verdict (R2, \u00a76).",
+  "tool_calls": 10,
+  "tokens": 0,
+  "latency_s": 0.05
+}

@@ -1,0 +1,205 @@
+{
+ "case_id": "HHG-010",
+ "trace": [
+  {
+   "step": 1,
+   "name": "trigger",
+   "detail": "risk_score: Real-time model scored transaction 3506725 ($1,000.03, online) at 0.90. Review and decide.",
+   "tool_calls_so_far": 1
+  },
+  {
+   "step": 2,
+   "name": "card_profile",
+   "detail": "33 prior transactions on C10434-K1; median $68.98",
+   "tool_calls_so_far": 3
+  },
+  {
+   "step": 3,
+   "name": "cardholder_profile",
+   "detail": "behaviour profile C10434_469.0_153.0: 1 transactions",
+   "tool_calls_so_far": 4
+  },
+  {
+   "step": 4,
+   "name": "device_neighbourhood",
+   "detail": "profile used by 208 customers overall; 0 cards in the 14-day window",
+   "tool_calls_so_far": 5
+  },
+  {
+   "step": 5,
+   "name": "prior_cases",
+   "detail": "1 closed cases on this card, 0 on this device",
+   "tool_calls_so_far": 7
+  },
+  {
+   "step": 6,
+   "name": "detectors",
+   "detail": "new_device(+0.6), unusual_amount(+0.7), case_memory_model(+0.0)",
+   "tool_calls_so_far": 7
+  },
+  {
+   "step": 7,
+   "name": "assess",
+   "detail": "p=0.14, 2 fraud / 1 legitimate independent evidence, provisional pattern card_not_present_new_device, verdict legitimate",
+   "tool_calls_so_far": 7
+  },
+  {
+   "step": 8,
+   "name": "policy",
+   "detail": "initial=['CREATE_CASE', 'VERIFY_WITH_CUSTOMER'] response=confirm final=['CLOSE_NO_FRAUD']",
+   "tool_calls_so_far": 7
+  },
+  {
+   "step": 9,
+   "name": "memory",
+   "detail": "retrieved closed cases ['CC-4397', 'CC-4021', 'CC-0873']; 0 earlier investigations in case memory",
+   "tool_calls_so_far": 8
+  },
+  {
+   "step": 10,
+   "name": "explain",
+   "detail": "summary and report narrative written (template)",
+   "tool_calls_so_far": 8
+  },
+  {
+   "step": 11,
+   "name": "execute",
+   "detail": "CREATE_CASE:executed, VERIFY_WITH_CUSTOMER:executed, CLOSE_NO_FRAUD:executed",
+   "tool_calls_so_far": 8
+  },
+  {
+   "step": 12,
+   "name": "case_memory_write",
+   "detail": "INV-HHG-010 written to local case memory",
+   "tool_calls_so_far": 9
+  }
+ ],
+ "tool_log": [
+  {
+   "tool": "get_txn",
+   "params": {
+    "txn_id": 3506725
+   },
+   "rows": 1
+  },
+  {
+   "tool": "card_txns",
+   "params": {
+    "card_id": "C10434-K1",
+    "t_from": "2016-07-01 00:00:00",
+    "t_to": "2016-12-02 15:18:26"
+   },
+   "rows": 33
+  },
+  {
+   "tool": "card_txns",
+   "params": {
+    "card_id": "C10434-K1",
+    "t_from": "2016-11-25 15:18:27",
+    "t_to": "2016-12-02 18:18:27"
+   },
+   "rows": 2
+  },
+  {
+   "tool": "cardholder_txns",
+   "params": {
+    "uid": "C10434_469.0_153.0"
+   },
+   "rows": 1
+  },
+  {
+   "tool": "device_footprint",
+   "params": {
+    "device": "Windows | Windows 10 | edge 16.0 | 1366x768"
+   },
+   "rows": 1
+  },
+  {
+   "tool": "fraud_proximity",
+   "params": {
+    "card_id": "C10434-K1"
+   },
+   "rows": 0
+  },
+  {
+   "tool": "cases_by_card",
+   "params": {
+    "card_id": "C10434-K1"
+   },
+   "rows": 1
+  },
+  {
+   "tool": "case_memory",
+   "params": {
+    "pattern": "none",
+    "device": "Windows | Windows 10 | edge 16.0 | 1366x768"
+   },
+   "rows": 4
+  },
+  {
+   "tool": "write_case(local)",
+   "params": {
+    "id": "INV-HHG-010"
+   },
+   "rows": 1
+  }
+ ],
+ "decision_history": [
+  {
+   "phase": "assessment",
+   "probability": 0.14,
+   "verdict": "legitimate",
+   "recommended": [
+    "CREATE_CASE",
+    "VERIFY_WITH_CUSTOMER"
+   ]
+  },
+  {
+   "phase": "evidence_request",
+   "type": "customer_validation",
+   "response": "confirm",
+   "detail": "Customer confirms they made the purchase from a new phone/computer (simulated: response chosen to be consistent with the pre-request evidence, assessed probability 0.14)"
+  },
+  {
+   "phase": "reassessment",
+   "probability": 0.08,
+   "verdict": "legitimate",
+   "recommended": [
+    "CLOSE_NO_FRAUD"
+   ]
+  },
+  {
+   "at": "2026-09-22T18:31:13+00:00",
+   "action": "CREATE_CASE",
+   "route": "auto",
+   "status": "executed",
+   "detail": "case opened for C10434-K1"
+  },
+  {
+   "at": "2026-09-22T18:31:13+00:00",
+   "action": "VERIFY_WITH_CUSTOMER",
+   "route": "auto",
+   "status": "executed",
+   "detail": "verification request sent to holder of C10434-K1"
+  },
+  {
+   "at": "2026-09-22T18:31:13+00:00",
+   "action": "CLOSE_NO_FRAUD",
+   "route": "auto",
+   "status": "executed",
+   "detail": "alert on C10434-K1 closed as legitimate"
+  }
+ ],
+ "p_initial": 0.14,
+ "episode": [],
+ "flagged": {
+  "id": "3506725",
+  "amt": 1000.030029296875,
+  "ts": "2016-12-02 15:18:27",
+  "channel": "online",
+  "device": "Windows | Windows 10 | edge 16.0 | 1366x768",
+  "region": "469",
+  "risk_score": 0.9,
+  "p_model": 0.002628410976118864
+ }
+}

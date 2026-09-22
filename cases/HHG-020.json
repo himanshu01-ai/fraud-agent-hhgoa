@@ -1,0 +1,125 @@
+{
+  "case_id": "HHG-020",
+  "case": {
+    "status": "closed_legitimate",
+    "verdict": "legitimate",
+    "fraud_probability": 0.08,
+    "pattern": "none",
+    "pattern_description": "",
+    "affected_txn_ids": [],
+    "first_suspicious_txn_id": "",
+    "connected_card_ids": [],
+    "connected_device_profiles": [],
+    "exposure_usd": 0.0,
+    "evidence": [
+      {
+        "claim": "Device profile \"Trident/7.0 | Windows 10 | ie 11.0 for desktop | 1920x1080\" is marked New and has never been seen on this card (4 prior online transactions)",
+        "source": "graph",
+        "ref": "query:card_txns(c=C12265-K2)",
+        "entity_ids": [
+          "3509359"
+        ]
+      },
+      {
+        "claim": "Product code R used 0 times in 82 prior transactions on this card",
+        "source": "graph",
+        "ref": "query:card_txns(c=C12265-K2)",
+        "entity_ids": [
+          "3509359"
+        ]
+      },
+      {
+        "claim": "$125.08 is within the card's normal range (median $107.91, 90th percentile $331.19)",
+        "source": "graph",
+        "ref": "query:card_txns(c=C12265-K2)",
+        "entity_ids": [
+          "3509359"
+        ]
+      },
+      {
+        "claim": "Case-memory model (trained on 5,565 closed cases) scores the flagged transaction 0.01; bank risk score 0.52",
+        "source": "external",
+        "ref": "model:case_memory_lgbm",
+        "entity_ids": [
+          "3509359"
+        ]
+      },
+      {
+        "claim": "2 earlier closed case(s) on this card (2 confirmed fraud)",
+        "source": "graph",
+        "ref": "query:cases_by_card",
+        "entity_ids": [
+          "CC-2277",
+          "CC-2447"
+        ]
+      },
+      {
+        "claim": "Customer confirms they made the purchase from a new phone/computer",
+        "source": "customer",
+        "ref": "evidence_request:1",
+        "entity_ids": []
+      },
+      {
+        "claim": "Policy R1 applied",
+        "source": "document",
+        "ref": "rag/fraud_policy.md#R1",
+        "entity_ids": []
+      },
+      {
+        "claim": "Policy R3 applied",
+        "source": "document",
+        "ref": "rag/fraud_policy.md#R3",
+        "entity_ids": []
+      }
+    ],
+    "similar_prior_cases": [
+      "CC-4397",
+      "CC-4021",
+      "CC-2447"
+    ],
+    "summary": "Legitimate activity on card C12265-K2 (risk score): Real-time model scored transaction 3509359 ($125.08, online) at 0.52. Device profile \"Trident/7.0 | Windows 10 | ie 11.0 for desktop | 1920x1080\" is marked New and has never been seen on this card (4 prior online transactions). Product code R used 0 times in 82 prior transactions on this card. Evidence requested; assumed response: Customer confirms they made the purchase from a new phone/computer. Final probability 0.08; exposure $0.00; actions: CLOSE_NO_FRAUD.",
+    "written_to_graph": false,
+    "graph_case_id": "INV-HHG-020"
+  },
+  "evidence_requests": [
+    {
+      "type": "customer_validation",
+      "asked_after_step": 7,
+      "assumed_response": "Customer confirms they made the purchase from a new phone/computer (simulated: response chosen to be consistent with the pre-request evidence, assessed probability 0.08)"
+    }
+  ],
+  "next_best_actions": {
+    "initial": [
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "\u00a73a: evidence is being requested / customer dispute \u2014 open a case"
+      },
+      {
+        "action": "VERIFY_WITH_CUSTOMER",
+        "route": "auto",
+        "reason": "R1: assessed probability 0.08 < 0.70 on weak / single-signal evidence \u2014 verify before any block"
+      }
+    ],
+    "final": [
+      {
+        "action": "CLOSE_NO_FRAUD",
+        "route": "auto",
+        "reason": "R3: customer confirmed the transaction; confirmation noted in the case"
+      }
+    ],
+    "what_changed": "Customer confirmed the transaction: probability moved from 0.08 to 0.08 and the recommendation changed from CREATE_CASE, VERIFY_WITH_CUSTOMER to CLOSE_NO_FRAUD."
+  },
+  "sar": {
+    "file": false,
+    "reason": "No report: verdict is legitimate; \u00a73a requires confirmed or strongly suspected fraud.",
+    "narrative": "",
+    "subjects": [],
+    "total_amount_usd": 0,
+    "activity_dates": []
+  },
+  "stop_reason": "The verification response settles the question (\u00a76).",
+  "tool_calls": 9,
+  "tokens": 0,
+  "latency_s": 0.02
+}

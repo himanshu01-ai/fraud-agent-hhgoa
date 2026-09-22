@@ -1,0 +1,103 @@
+{
+  "case_id": "HHG-001",
+  "case": {
+    "status": "closed_legitimate",
+    "verdict": "legitimate",
+    "fraud_probability": 0.0,
+    "pattern": "none",
+    "pattern_description": "",
+    "affected_txn_ids": [],
+    "first_suspicious_txn_id": "",
+    "connected_card_ids": [],
+    "connected_device_profiles": [],
+    "exposure_usd": 0.0,
+    "evidence": [
+      {
+        "claim": "$77.07 is within the card's normal range (median $83.94, 90th percentile $225.96)",
+        "source": "graph",
+        "ref": "query:card_txns(c=C12382-K1)",
+        "entity_ids": [
+          "3514030"
+        ]
+      },
+      {
+        "claim": "Billing region 444 has 10 prior card-present transactions on this card",
+        "source": "graph",
+        "ref": "query:card_txns(c=C12382-K1)",
+        "entity_ids": [
+          "3514030"
+        ]
+      },
+      {
+        "claim": "Matches the cardholder's own habitual spend: 10 earlier product-W purchases in region 444 since 2016-09-13, median $59.05",
+        "source": "graph",
+        "ref": "query:cardholder_txns(h=C12382_444.0_73.0)",
+        "entity_ids": [
+          "3356278",
+          "3376974",
+          "3400970",
+          "3441958",
+          "3471020",
+          "3490282"
+        ]
+      },
+      {
+        "claim": "Case-memory model (trained on 5,565 closed cases) scores the flagged transaction 0.01; bank risk score 0.61",
+        "source": "external",
+        "ref": "model:case_memory_lgbm",
+        "entity_ids": [
+          "3514030"
+        ]
+      },
+      {
+        "claim": "4 earlier closed case(s) on this card (4 confirmed fraud)",
+        "source": "graph",
+        "ref": "query:cases_by_card",
+        "entity_ids": [
+          "CC-1066",
+          "CC-1673",
+          "CC-2964",
+          "CC-3587"
+        ]
+      }
+    ],
+    "similar_prior_cases": [
+      "CC-2850",
+      "CC-2749",
+      "CC-3587"
+    ],
+    "summary": "Legitimate activity on card C12382-K1 (risk score): Real-time model scored transaction 3514030 ($77.07, in billing region 444.0) at 0.61. $77.07 is within the card's normal range (median $83.94, 90th percentile $225.96). Billing region 444 has 10 prior card-present transactions on this card. Final probability 0.00; exposure $0.00; actions: CLOSE_NO_FRAUD.",
+    "written_to_graph": false,
+    "graph_case_id": "INV-HHG-001"
+  },
+  "evidence_requests": [],
+  "next_best_actions": {
+    "initial": [
+      {
+        "action": "CLOSE_NO_FRAUD",
+        "route": "auto",
+        "reason": "\u00a76 stopping: probability 0.00 with 3 independent pieces of legitimate evidence; no rule calls for verification"
+      }
+    ],
+    "final": [
+      {
+        "action": "CLOSE_NO_FRAUD",
+        "route": "auto",
+        "reason": "\u00a76 stopping: probability 0.00 with 3 independent pieces of legitimate evidence; no rule calls for verification"
+      }
+    ],
+    "what_changed": "nothing"
+  },
+  "sar": {
+    "file": false,
+    "reason": "No report: verdict is legitimate; \u00a73a requires confirmed or strongly suspected fraud.",
+    "narrative": "",
+    "subjects": [],
+    "total_amount_usd": 0,
+    "activity_dates": []
+  },
+  "stop_reason": "Probability 0.00 \u2264 0.15 supported by 3 independent pieces of evidence (\u00a76). Further steps would not change the decision.",
+  "tool_calls": 8,
+  "tokens": 0,
+  "latency_s": 0.02
+}

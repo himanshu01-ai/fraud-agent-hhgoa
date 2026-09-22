@@ -1,0 +1,173 @@
+{
+ "case_id": "HHG-004",
+ "trace": [
+  {
+   "step": 1,
+   "name": "trigger",
+   "detail": "customer_report: Customer C08106 message: 'I never made this $128.33 purchase. Please check my card.' Refers to 3583227.",
+   "tool_calls_so_far": 1
+  },
+  {
+   "step": 2,
+   "name": "card_profile",
+   "detail": "209 prior transactions on C08106-K1; median $27.73",
+   "tool_calls_so_far": 3
+  },
+  {
+   "step": 3,
+   "name": "cardholder_profile",
+   "detail": "behaviour profile nan: 0 transactions",
+   "tool_calls_so_far": 3
+  },
+  {
+   "step": 4,
+   "name": "prior_cases",
+   "detail": "4 closed cases on this card, 0 on this device",
+   "tool_calls_so_far": 5
+  },
+  {
+   "step": 5,
+   "name": "detectors",
+   "detail": "new_device(+0.6), unusual_amount(+0.7), fraud_proximity(+0.3), case_memory_model(+0.0)",
+   "tool_calls_so_far": 5
+  },
+  {
+   "step": 6,
+   "name": "assess",
+   "detail": "p=0.62, 3 fraud / 1 legitimate independent evidence, provisional pattern card_not_present_new_device, verdict uncertain",
+   "tool_calls_so_far": 5
+  },
+  {
+   "step": 7,
+   "name": "policy",
+   "detail": "initial=['BLOCK_CARD', 'CREATE_CASE'] response=None final=['BLOCK_CARD', 'CREATE_CASE']",
+   "tool_calls_so_far": 5
+  },
+  {
+   "step": 8,
+   "name": "memory",
+   "detail": "retrieved closed cases ['CC-3193', 'CC-0842', 'CC-4850', 'CC-3778']; 2 earlier investigations in case memory",
+   "tool_calls_so_far": 6
+  },
+  {
+   "step": 9,
+   "name": "explain",
+   "detail": "summary and report narrative written (template)",
+   "tool_calls_so_far": 6
+  },
+  {
+   "step": 10,
+   "name": "execute",
+   "detail": "BLOCK_CARD:pending_approval, CREATE_CASE:executed",
+   "tool_calls_so_far": 6
+  },
+  {
+   "step": 11,
+   "name": "case_memory_write",
+   "detail": "INV-HHG-004 written to local case memory",
+   "tool_calls_so_far": 7
+  }
+ ],
+ "tool_log": [
+  {
+   "tool": "get_txn",
+   "params": {
+    "txn_id": 3583227
+   },
+   "rows": 1
+  },
+  {
+   "tool": "card_txns",
+   "params": {
+    "card_id": "C08106-K1",
+    "t_from": "2016-07-01 00:00:00",
+    "t_to": "2016-12-29 01:53:53"
+   },
+   "rows": 209
+  },
+  {
+   "tool": "card_txns",
+   "params": {
+    "card_id": "C08106-K1",
+    "t_from": "2016-12-22 01:53:54",
+    "t_to": "2016-12-29 07:53:54"
+   },
+   "rows": 5
+  },
+  {
+   "tool": "fraud_proximity",
+   "params": {
+    "card_id": "C08106-K1"
+   },
+   "rows": 33
+  },
+  {
+   "tool": "cases_by_card",
+   "params": {
+    "card_id": "C08106-K1"
+   },
+   "rows": 4
+  },
+  {
+   "tool": "case_memory",
+   "params": {
+    "pattern": "card_not_present_new_device",
+    "device": null
+   },
+   "rows": 2
+  },
+  {
+   "tool": "write_case(local)",
+   "params": {
+    "id": "INV-HHG-004"
+   },
+   "rows": 1
+  }
+ ],
+ "decision_history": [
+  {
+   "phase": "assessment",
+   "probability": 0.62,
+   "verdict": "uncertain",
+   "recommended": [
+    "BLOCK_CARD",
+    "CREATE_CASE"
+   ]
+  },
+  {
+   "at": "2026-09-22T18:31:14+00:00",
+   "action": "BLOCK_CARD",
+   "route": "L1",
+   "status": "pending_approval",
+   "detail": "requires L1; no approval supplied"
+  },
+  {
+   "at": "2026-09-22T18:31:14+00:00",
+   "action": "CREATE_CASE",
+   "route": "auto",
+   "status": "executed",
+   "detail": "case opened for C08106-K1"
+  }
+ ],
+ "p_initial": 0.62,
+ "episode": [
+  {
+   "id": "3583227",
+   "amt": 128.3300018310547,
+   "channel": "online",
+   "ts": "2016-12-29 01:53:54",
+   "device": "NA | NA | firefox 47.0 | NA",
+   "addr1": ""
+  }
+ ],
+ "flagged": {
+  "id": "3583227",
+  "amt": 128.3300018310547,
+  "ts": "2016-12-29 01:53:54",
+  "channel": "online",
+  "device": "NA | NA | firefox 47.0 | NA",
+  "region": "",
+  "risk_score": 0.34,
+  "p_model": 0.014031004512672734
+ }
+}

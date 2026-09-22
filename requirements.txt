@@ -1,0 +1,9 @@
+pandas>=2.1
+numpy
+scikit-learn
+lightgbm
+pyTigerGraph>=1.6
+tigergraph-mcp
+mcp>=1.0
+python-dotenv
+anthropic

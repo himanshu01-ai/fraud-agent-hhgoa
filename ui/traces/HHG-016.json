@@ -1,0 +1,202 @@
+{
+ "case_id": "HHG-016",
+ "trace": [
+  {
+   "step": 1,
+   "name": "trigger",
+   "detail": "customer_report: Customer C09988 message: 'I never made this $59.67 purchase. Please check my card.' Refers to 3534820.",
+   "tool_calls_so_far": 1
+  },
+  {
+   "step": 2,
+   "name": "card_profile",
+   "detail": "48 prior transactions on C09988-K1; median $37.76",
+   "tool_calls_so_far": 3
+  },
+  {
+   "step": 3,
+   "name": "cardholder_profile",
+   "detail": "behaviour profile nan: 0 transactions",
+   "tool_calls_so_far": 3
+  },
+  {
+   "step": 4,
+   "name": "device_neighbourhood",
+   "detail": "profile used by 158 customers overall; 36 cards in the 14-day window",
+   "tool_calls_so_far": 6
+  },
+  {
+   "step": 5,
+   "name": "prior_cases",
+   "detail": "0 closed cases on this card, 10 on this device",
+   "tool_calls_so_far": 8
+  },
+  {
+   "step": 6,
+   "name": "detectors",
+   "detail": "new_device(+0.6), amount_in_range(-0.3), fraud_proximity(+0.3), case_memory_model(+0.0)",
+   "tool_calls_so_far": 8
+  },
+  {
+   "step": 7,
+   "name": "assess",
+   "detail": "p=0.83, 2 fraud / 0 legitimate independent evidence, provisional pattern card_not_present_new_device, verdict fraud",
+   "tool_calls_so_far": 8
+  },
+  {
+   "step": 8,
+   "name": "policy",
+   "detail": "initial=['BLOCK_CARD', 'CREATE_CASE'] response=None final=['BLOCK_CARD', 'CREATE_CASE']",
+   "tool_calls_so_far": 8
+  },
+  {
+   "step": 9,
+   "name": "memory",
+   "detail": "retrieved closed cases ['CC-0497', 'CC-2540', 'CC-2675', 'CC-2694', 'CC-3580', 'CC-4523']; 0 earlier investigations in case memory",
+   "tool_calls_so_far": 9
+  },
+  {
+   "step": 10,
+   "name": "explain",
+   "detail": "summary and report narrative written (template)",
+   "tool_calls_so_far": 9
+  },
+  {
+   "step": 11,
+   "name": "execute",
+   "detail": "BLOCK_CARD:pending_approval, CREATE_CASE:executed",
+   "tool_calls_so_far": 9
+  },
+  {
+   "step": 12,
+   "name": "case_memory_write",
+   "detail": "INV-HHG-016 written to local case memory",
+   "tool_calls_so_far": 10
+  }
+ ],
+ "tool_log": [
+  {
+   "tool": "get_txn",
+   "params": {
+    "txn_id": 3534820
+   },
+   "rows": 1
+  },
+  {
+   "tool": "card_txns",
+   "params": {
+    "card_id": "C09988-K1",
+    "t_from": "2016-07-01 00:00:00",
+    "t_to": "2016-12-11 22:39:07"
+   },
+   "rows": 48
+  },
+  {
+   "tool": "card_txns",
+   "params": {
+    "card_id": "C09988-K1",
+    "t_from": "2016-12-04 22:39:08",
+    "t_to": "2016-12-12 01:39:08"
+   },
+   "rows": 1
+  },
+  {
+   "tool": "device_footprint",
+   "params": {
+    "device": "Windows | NA | edge 16.0 | NA"
+   },
+   "rows": 1
+  },
+  {
+   "tool": "device_txns",
+   "params": {
+    "device": "Windows | NA | edge 16.0 | NA",
+    "t_from": "2016-11-27 22:39:08",
+    "t_to": "2016-12-12 01:39:08"
+   },
+   "rows": 59
+  },
+  {
+   "tool": "cases_by_device",
+   "params": {
+    "device": "Windows | NA | edge 16.0 | NA"
+   },
+   "rows": 10
+  },
+  {
+   "tool": "fraud_proximity",
+   "params": {
+    "card_id": "C09988-K1"
+   },
+   "rows": 10
+  },
+  {
+   "tool": "cases_by_card",
+   "params": {
+    "card_id": "C09988-K1"
+   },
+   "rows": 0
+  },
+  {
+   "tool": "case_memory",
+   "params": {
+    "pattern": "card_not_present_new_device",
+    "device": "Windows | NA | edge 16.0 | NA"
+   },
+   "rows": 0
+  },
+  {
+   "tool": "write_case(local)",
+   "params": {
+    "id": "INV-HHG-016"
+   },
+   "rows": 1
+  }
+ ],
+ "decision_history": [
+  {
+   "phase": "assessment",
+   "probability": 0.83,
+   "verdict": "fraud",
+   "recommended": [
+    "BLOCK_CARD",
+    "CREATE_CASE"
+   ]
+  },
+  {
+   "at": "2026-09-22T18:31:13+00:00",
+   "action": "BLOCK_CARD",
+   "route": "L1",
+   "status": "pending_approval",
+   "detail": "requires L1; no approval supplied"
+  },
+  {
+   "at": "2026-09-22T18:31:13+00:00",
+   "action": "CREATE_CASE",
+   "route": "auto",
+   "status": "executed",
+   "detail": "case opened for C09988-K1"
+  }
+ ],
+ "p_initial": 0.83,
+ "episode": [
+  {
+   "id": "3534820",
+   "amt": 59.66999816894531,
+   "channel": "online",
+   "ts": "2016-12-11 22:39:08",
+   "device": "Windows | NA | edge 16.0 | NA",
+   "addr1": ""
+  }
+ ],
+ "flagged": {
+  "id": "3534820",
+  "amt": 59.66999816894531,
+  "ts": "2016-12-11 22:39:08",
+  "channel": "online",
+  "device": "Windows | NA | edge 16.0 | NA",
+  "region": "",
+  "risk_score": 0.37,
+  "p_model": 0.29845356947602314
+ }
+}
