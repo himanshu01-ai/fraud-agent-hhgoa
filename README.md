@@ -16,6 +16,11 @@ investigation back into the graph as case memory.
 > AUC of **0.05** for separating confirmed fraud from cleared alerts — the cleared alerts are exactly the
 > high-score false alarms. Fraud Detection Agent starts from the graph, not the score.
 
+> **Team rule — never download or open the public IEEE-CIS/Kaggle files.** The IDs, times and amounts in this
+> dataset are deliberately disguised, so the public data does not describe it and cannot validate anything here.
+> Touching it risks disqualification. Work only from the supplied `$DATA` folder. See
+> [docs/DATA_DICTIONARY.md](docs/DATA_DICTIONARY.md) for what is in it.
+
 ## Results on the 20 benchmark cases
 
 | | |
