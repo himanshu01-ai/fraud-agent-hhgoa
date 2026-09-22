@@ -1,0 +1,157 @@
+{
+  "case_id": "HHG-018",
+  "case": {
+    "status": "closed_legitimate",
+    "verdict": "legitimate",
+    "fraud_probability": 0.08,
+    "pattern": "none",
+    "pattern_description": "",
+    "affected_txn_ids": [],
+    "first_suspicious_txn_id": "",
+    "connected_card_ids": [],
+    "connected_device_profiles": [],
+    "exposure_usd": 0.0,
+    "evidence": [
+      {
+        "claim": "$39.08 is within the card's normal range (median $86.92, 90th percentile $304.90)",
+        "source": "graph",
+        "ref": "query:card_txns(c=C02354-K2)",
+        "entity_ids": [
+          "3491361"
+        ]
+      },
+      {
+        "claim": "Billing region 126 has 565 prior card-present transactions on this card",
+        "source": "graph",
+        "ref": "query:card_txns(c=C02354-K2)",
+        "entity_ids": [
+          "3491361"
+        ]
+      },
+      {
+        "claim": "Matches the cardholder's own habitual spend: 13 earlier product-W purchases in region 126 since 2016-07-16, median $49.09",
+        "source": "graph",
+        "ref": "query:cardholder_txns(h=C02354_126.0_-185.0)",
+        "entity_ids": [
+          "3333448",
+          "3345735",
+          "3351986",
+          "3364912",
+          "3484403",
+          "3485990"
+        ]
+      },
+      {
+        "claim": "48 confirmed-fraud closed case(s) within two hops of this card through shared rare device profiles in the last 30 days (CC-0419, CC-0454, CC-1324, CC-2511, CC-2636, CC-2800)",
+        "source": "graph",
+        "ref": "query:fraud_proximity",
+        "entity_ids": [
+          "C02354-K2",
+          "CC-0419",
+          "CC-0454",
+          "CC-1324",
+          "CC-2511",
+          "CC-2636",
+          "CC-2800"
+        ]
+      },
+      {
+        "claim": "Case-memory model (trained on 5,565 closed cases) scores the flagged transaction 0.07; bank risk score 0.48",
+        "source": "external",
+        "ref": "model:case_memory_lgbm",
+        "entity_ids": [
+          "3491361"
+        ]
+      },
+      {
+        "claim": "20 earlier closed case(s) on this card (19 confirmed fraud)",
+        "source": "graph",
+        "ref": "query:cases_by_card",
+        "entity_ids": [
+          "CC-4436",
+          "CC-4721",
+          "CC-4942",
+          "CC-5441",
+          "CC-5558"
+        ]
+      },
+      {
+        "claim": "Shown the merchant, date, amount and region, the customer recognises the charge as their own (it matches their regular spending) and withdraws the dispute",
+        "source": "customer",
+        "ref": "evidence_request:1",
+        "entity_ids": []
+      },
+      {
+        "claim": "Policy R3 applied",
+        "source": "document",
+        "ref": "rag/fraud_policy.md#R3",
+        "entity_ids": []
+      },
+      {
+        "claim": "Policy R7 applied",
+        "source": "document",
+        "ref": "rag/fraud_policy.md#R7",
+        "entity_ids": []
+      }
+    ],
+    "similar_prior_cases": [
+      "CC-2850",
+      "CC-2749",
+      "CC-5558"
+    ],
+    "summary": "Legitimate activity on card C02354-K2 (customer report): Customer C02354 message: 'I never made this $39.08 purchase. Please check my card.' Refers to 3491361. $39.08 is within the card's normal range (median $86.92, 90th percentile $304.90). Billing region 126 has 565 prior card-present transactions on this card. Evidence requested; assumed response: Shown the merchant, date, amount and region, the customer recognises the charge as their own (it matches their regular spending) and withdraws the dispute. Final probability 0.08; exposure $0.00; actions: WARN_CUSTOMER, CLOSE_NO_FRAUD.",
+    "written_to_graph": false,
+    "graph_case_id": "INV-HHG-018"
+  },
+  "evidence_requests": [
+    {
+      "type": "customer_validation",
+      "asked_after_step": 6,
+      "assumed_response": "Shown the merchant, date, amount and region, the customer recognises the charge as their own (it matches their regular spending) and withdraws the dispute (simulated: response chosen to be consistent with the pre-request evidence, assessed probability 0.07)"
+    }
+  ],
+  "next_best_actions": {
+    "initial": [
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "\u00a73a: evidence is being requested / customer dispute \u2014 open a case"
+      },
+      {
+        "action": "VERIFY_WITH_CUSTOMER",
+        "route": "auto",
+        "reason": "R7: disputed charge matches the cardholder's own recurring pattern \u2014 confirm details with the customer, do not block"
+      },
+      {
+        "action": "WARN_CUSTOMER",
+        "route": "auto",
+        "reason": "R7: remind the customer of the recurring charge"
+      }
+    ],
+    "final": [
+      {
+        "action": "WARN_CUSTOMER",
+        "route": "auto",
+        "reason": "R7: send a recurring-charge reminder; do not block"
+      },
+      {
+        "action": "CLOSE_NO_FRAUD",
+        "route": "auto",
+        "reason": "R3: customer confirmed the transaction; confirmation noted in the case"
+      }
+    ],
+    "what_changed": "Customer confirmed the transaction: probability moved from 0.07 to 0.08 and the recommendation changed from CREATE_CASE, VERIFY_WITH_CUSTOMER, WARN_CUSTOMER to WARN_CUSTOMER, CLOSE_NO_FRAUD."
+  },
+  "sar": {
+    "file": false,
+    "reason": "No report: verdict is legitimate; \u00a73a requires confirmed or strongly suspected fraud.",
+    "narrative": "",
+    "subjects": [],
+    "total_amount_usd": 0,
+    "activity_dates": []
+  },
+  "stop_reason": "The verification response settles the question (\u00a76).",
+  "tool_calls": 8,
+  "tokens": 0,
+  "latency_s": 0.04
+}

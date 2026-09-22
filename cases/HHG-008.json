@@ -1,0 +1,136 @@
+{
+  "case_id": "HHG-008",
+  "case": {
+    "status": "closed_fraud",
+    "verdict": "fraud",
+    "fraud_probability": 0.99,
+    "pattern": "card_not_present_fraud",
+    "pattern_description": "",
+    "affected_txn_ids": [
+      "3557979",
+      "3557987",
+      "3558054"
+    ],
+    "first_suspicious_txn_id": "3557979",
+    "connected_card_ids": [],
+    "connected_device_profiles": [],
+    "exposure_usd": 166.97,
+    "evidence": [
+      {
+        "claim": "3 near-identical online charges ($55.60, $55.69, $55.68) within 20 minutes from the same device/email; case-memory model mean score 0.76",
+        "source": "graph",
+        "ref": "query:card_txns(c=C13171-K2)",
+        "entity_ids": [
+          "3557979",
+          "3557987",
+          "3558054"
+        ]
+      },
+      {
+        "claim": "Device profile \"NA | NA | chrome 66.0 | NA\" was used on this card more than a week before this alert",
+        "source": "graph",
+        "ref": "query:card_txns(c=C13171-K2)",
+        "entity_ids": [
+          "3558054"
+        ]
+      },
+      {
+        "claim": "$55.68 is within the card's normal range (median $39.37, 90th percentile $111.23)",
+        "source": "graph",
+        "ref": "query:card_txns(c=C13171-K2)",
+        "entity_ids": [
+          "3558054"
+        ]
+      },
+      {
+        "claim": "49 confirmed-fraud closed case(s) within two hops of this card through shared rare device profiles in the last 30 days (CC-0497, CC-2116, CC-2154, CC-2222, CC-2301, CC-2371)",
+        "source": "graph",
+        "ref": "query:fraud_proximity",
+        "entity_ids": [
+          "C13171-K2",
+          "CC-0497",
+          "CC-2116",
+          "CC-2154",
+          "CC-2222",
+          "CC-2301",
+          "CC-2371"
+        ]
+      },
+      {
+        "claim": "Case-memory model (trained on 5,565 closed cases) scores the flagged transaction 0.95; bank risk score 0.38",
+        "source": "external",
+        "ref": "model:case_memory_lgbm",
+        "entity_ids": [
+          "3558054"
+        ]
+      },
+      {
+        "claim": "19 earlier closed case(s) on this card (18 confirmed fraud)",
+        "source": "graph",
+        "ref": "query:cases_by_card",
+        "entity_ids": [
+          "CC-3928",
+          "CC-4163",
+          "CC-4485",
+          "CC-4819",
+          "CC-5010"
+        ]
+      },
+      {
+        "claim": "Policy R2 applied",
+        "source": "document",
+        "ref": "rag/fraud_policy.md#R2",
+        "entity_ids": []
+      }
+    ],
+    "similar_prior_cases": [
+      "CC-5099",
+      "CC-1180",
+      "CC-1223",
+      "CC-5010"
+    ],
+    "summary": "Fraud (card not present fraud) on card C13171-K2 (customer report): Customer C13171 message: 'I never made this $55.68 purchase. Please check my card.' Refers to 3558054. 3 near-identical online charges ($55.60, $55.69, $55.68) within 20 minutes from the same device/email; case-memory model mean score 0.76. Device profile \"NA | NA | chrome 66.0 | NA\" was used on this card more than a week before this alert. Final probability 0.99; exposure $166.97; actions: BLOCK_CARD, CREATE_CASE.",
+    "written_to_graph": false,
+    "graph_case_id": "INV-HHG-008"
+  },
+  "evidence_requests": [],
+  "next_best_actions": {
+    "initial": [
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "R2: customer denies the transaction; exposure $166.97 (\u2264 $2,500)"
+      },
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "R2 / \u00a73a: record the investigation and write it to the graph"
+      }
+    ],
+    "final": [
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "R2: customer denies the transaction; exposure $166.97 (\u2264 $2,500)"
+      },
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "R2 / \u00a73a: record the investigation and write it to the graph"
+      }
+    ],
+    "what_changed": "nothing"
+  },
+  "sar": {
+    "file": false,
+    "reason": "Case only, no report (\u00a73a): exposure $166.97 \u2264 $1,000, no shared device/region link to other customers, known pattern.",
+    "narrative": "",
+    "subjects": [],
+    "total_amount_usd": 0,
+    "activity_dates": []
+  },
+  "stop_reason": "Customer denial plus corroborating graph evidence settles the verdict (R2, \u00a76); episode, connected cards and report decision complete.",
+  "tool_calls": 7,
+  "tokens": 0,
+  "latency_s": 0.03
+}

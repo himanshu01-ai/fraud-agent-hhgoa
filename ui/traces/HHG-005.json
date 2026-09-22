@@ -1,0 +1,221 @@
+{
+ "case_id": "HHG-005",
+ "trace": [
+  {
+   "step": 1,
+   "name": "trigger",
+   "detail": "risk_score: Real-time model scored transaction 3523199 ($100.07, online) at 0.54. Review and decide.",
+   "tool_calls_so_far": 1
+  },
+  {
+   "step": 2,
+   "name": "card_profile",
+   "detail": "90 prior transactions on C02923-K1; median $117.01",
+   "tool_calls_so_far": 3
+  },
+  {
+   "step": 3,
+   "name": "cardholder_profile",
+   "detail": "behaviour profile C02923_330.0_158.0: 1 transactions",
+   "tool_calls_so_far": 4
+  },
+  {
+   "step": 4,
+   "name": "device_neighbourhood",
+   "detail": "profile used by 112 customers overall; 1 cards in the 14-day window",
+   "tool_calls_so_far": 7
+  },
+  {
+   "step": 5,
+   "name": "prior_cases",
+   "detail": "3 closed cases on this card, 5 on this device",
+   "tool_calls_so_far": 9
+  },
+  {
+   "step": 6,
+   "name": "detectors",
+   "detail": "new_device(+0.6), new_email(+0.4), amount_in_range(-0.3), fraud_proximity(+0.3), case_memory_model(+0.0)",
+   "tool_calls_so_far": 9
+  },
+  {
+   "step": 7,
+   "name": "assess",
+   "detail": "p=0.11, 2 fraud / 1 legitimate independent evidence, provisional pattern card_not_present_new_device, verdict legitimate",
+   "tool_calls_so_far": 9
+  },
+  {
+   "step": 8,
+   "name": "policy",
+   "detail": "initial=['CREATE_CASE', 'VERIFY_WITH_CUSTOMER'] response=confirm final=['CLOSE_NO_FRAUD']",
+   "tool_calls_so_far": 9
+  },
+  {
+   "step": 9,
+   "name": "memory",
+   "detail": "retrieved closed cases ['CC-1672', 'CC-4397', 'CC-4021', 'CC-2857']; 0 earlier investigations in case memory",
+   "tool_calls_so_far": 10
+  },
+  {
+   "step": 10,
+   "name": "explain",
+   "detail": "summary and report narrative written (template)",
+   "tool_calls_so_far": 10
+  },
+  {
+   "step": 11,
+   "name": "execute",
+   "detail": "CREATE_CASE:executed, VERIFY_WITH_CUSTOMER:executed, CLOSE_NO_FRAUD:executed",
+   "tool_calls_so_far": 10
+  },
+  {
+   "step": 12,
+   "name": "case_memory_write",
+   "detail": "INV-HHG-005 written to local case memory",
+   "tool_calls_so_far": 11
+  }
+ ],
+ "tool_log": [
+  {
+   "tool": "get_txn",
+   "params": {
+    "txn_id": 3523199
+   },
+   "rows": 1
+  },
+  {
+   "tool": "card_txns",
+   "params": {
+    "card_id": "C02923-K1",
+    "t_from": "2016-07-01 00:00:00",
+    "t_to": "2016-12-07 21:38:36"
+   },
+   "rows": 90
+  },
+  {
+   "tool": "card_txns",
+   "params": {
+    "card_id": "C02923-K1",
+    "t_from": "2016-11-30 21:38:37",
+    "t_to": "2016-12-08 03:38:37"
+   },
+   "rows": 5
+  },
+  {
+   "tool": "cardholder_txns",
+   "params": {
+    "uid": "C02923_330.0_158.0"
+   },
+   "rows": 1
+  },
+  {
+   "tool": "device_footprint",
+   "params": {
+    "device": "iOS Device | iOS 9.3.5 | mobile safari 9.0 | 1024x768"
+   },
+   "rows": 1
+  },
+  {
+   "tool": "device_txns",
+   "params": {
+    "device": "iOS Device | iOS 9.3.5 | mobile safari 9.0 | 1024x768",
+    "t_from": "2016-11-23 21:38:37",
+    "t_to": "2016-12-08 03:38:37"
+   },
+   "rows": 1
+  },
+  {
+   "tool": "cases_by_device",
+   "params": {
+    "device": "iOS Device | iOS 9.3.5 | mobile safari 9.0 | 1024x768"
+   },
+   "rows": 5
+  },
+  {
+   "tool": "fraud_proximity",
+   "params": {
+    "card_id": "C02923-K1"
+   },
+   "rows": 2
+  },
+  {
+   "tool": "cases_by_card",
+   "params": {
+    "card_id": "C02923-K1"
+   },
+   "rows": 3
+  },
+  {
+   "tool": "case_memory",
+   "params": {
+    "pattern": "none",
+    "device": "iOS Device | iOS 9.3.5 | mobile safari 9.0 | 1024x768"
+   },
+   "rows": 8
+  },
+  {
+   "tool": "write_case(local)",
+   "params": {
+    "id": "INV-HHG-005"
+   },
+   "rows": 1
+  }
+ ],
+ "decision_history": [
+  {
+   "phase": "assessment",
+   "probability": 0.11,
+   "verdict": "legitimate",
+   "recommended": [
+    "CREATE_CASE",
+    "VERIFY_WITH_CUSTOMER"
+   ]
+  },
+  {
+   "phase": "evidence_request",
+   "type": "customer_validation",
+   "response": "confirm",
+   "detail": "Customer confirms they made the purchase from a new phone/computer (simulated: response chosen to be consistent with the pre-request evidence, assessed probability 0.11)"
+  },
+  {
+   "phase": "reassessment",
+   "probability": 0.08,
+   "verdict": "legitimate",
+   "recommended": [
+    "CLOSE_NO_FRAUD"
+   ]
+  },
+  {
+   "at": "2026-09-22T18:31:13+00:00",
+   "action": "CREATE_CASE",
+   "route": "auto",
+   "status": "executed",
+   "detail": "case opened for C02923-K1"
+  },
+  {
+   "at": "2026-09-22T18:31:13+00:00",
+   "action": "VERIFY_WITH_CUSTOMER",
+   "route": "auto",
+   "status": "executed",
+   "detail": "verification request sent to holder of C02923-K1"
+  },
+  {
+   "at": "2026-09-22T18:31:13+00:00",
+   "action": "CLOSE_NO_FRAUD",
+   "route": "auto",
+   "status": "executed",
+   "detail": "alert on C02923-K1 closed as legitimate"
+  }
+ ],
+ "p_initial": 0.11,
+ "episode": [],
+ "flagged": {
+  "id": "3523199",
+  "amt": 100.06999969482422,
+  "ts": "2016-12-07 21:38:37",
+  "channel": "online",
+  "device": "iOS Device | iOS 9.3.5 | mobile safari 9.0 | 1024x768",
+  "region": "330",
+  "risk_score": 0.54,
+  "p_model": 0.015507476709430614
+ }
+}

@@ -1,0 +1,241 @@
+{
+ "case_id": "HHG-014",
+ "trace": [
+  {
+   "step": 1,
+   "name": "trigger",
+   "detail": "analyst_request: Analyst request: several cards this month show purchases from the same unusual device profile. Review transaction 3478561 on card C13487-K1 and look for related activity.",
+   "tool_calls_so_far": 1
+  },
+  {
+   "step": 2,
+   "name": "card_profile",
+   "detail": "71 prior transactions on C13487-K1; median $55.92",
+   "tool_calls_so_far": 3
+  },
+  {
+   "step": 3,
+   "name": "cardholder_profile",
+   "detail": "behaviour profile C13487_191.0_143.0: 1 transactions",
+   "tool_calls_so_far": 4
+  },
+  {
+   "step": 4,
+   "name": "device_neighbourhood",
+   "detail": "profile used by 52 customers overall; 20 cards in the 14-day window",
+   "tool_calls_so_far": 7
+  },
+  {
+   "step": 5,
+   "name": "prior_cases",
+   "detail": "0 closed cases on this card, 4 on this device",
+   "tool_calls_so_far": 9
+  },
+  {
+   "step": 6,
+   "name": "detectors",
+   "detail": "shared_device_ring(+4.5), new_device(+0.6), proxy(+0.3), new_product(+0.4), amount_in_range(-0.3), fraud_proximity(+0.3), case_memory_model(+0.0)",
+   "tool_calls_so_far": 9
+  },
+  {
+   "step": 7,
+   "name": "assess",
+   "detail": "p=0.96, 4 fraud / 1 legitimate independent evidence, provisional pattern undocumented, verdict fraud",
+   "tool_calls_so_far": 9
+  },
+  {
+   "step": 8,
+   "name": "policy",
+   "detail": "initial=['BLOCK_CARD', 'CREATE_CASE', 'FILE_REPORT', 'MONITOR_CONNECTED_CARDS', 'ESCALATE_TO_ANALYST'] response=None final=['BLOCK_CARD', 'CREATE_CASE', 'FILE_REPORT', 'MONITOR_CONNECTED_CARDS', 'ESCALATE_TO_ANALYST']",
+   "tool_calls_so_far": 9
+  },
+  {
+   "step": 9,
+   "name": "memory",
+   "detail": "retrieved closed cases ['CC-2649', 'CC-2971', 'CC-2985', 'CC-3035']; 0 earlier investigations in case memory",
+   "tool_calls_so_far": 10
+  },
+  {
+   "step": 10,
+   "name": "explain",
+   "detail": "summary and report narrative written (template)",
+   "tool_calls_so_far": 10
+  },
+  {
+   "step": 11,
+   "name": "execute",
+   "detail": "BLOCK_CARD:pending_approval, CREATE_CASE:executed, FILE_REPORT:pending_approval, MONITOR_CONNECTED_CARDS:executed, ESCALATE_TO_ANALYST:executed",
+   "tool_calls_so_far": 10
+  },
+  {
+   "step": 12,
+   "name": "case_memory_write",
+   "detail": "INV-HHG-014 written to local case memory",
+   "tool_calls_so_far": 11
+  }
+ ],
+ "tool_log": [
+  {
+   "tool": "get_txn",
+   "params": {
+    "txn_id": 3478561
+   },
+   "rows": 1
+  },
+  {
+   "tool": "card_txns",
+   "params": {
+    "card_id": "C13487-K1",
+    "t_from": "2016-07-01 00:00:00",
+    "t_to": "2016-11-22 16:10:59"
+   },
+   "rows": 71
+  },
+  {
+   "tool": "card_txns",
+   "params": {
+    "card_id": "C13487-K1",
+    "t_from": "2016-11-15 16:11:00",
+    "t_to": "2016-11-22 20:11:00"
+   },
+   "rows": 5
+  },
+  {
+   "tool": "cardholder_txns",
+   "params": {
+    "uid": "C13487_191.0_143.0"
+   },
+   "rows": 1
+  },
+  {
+   "tool": "device_footprint",
+   "params": {
+    "device": "SM-G935F Build/NRD90M | Android 7.0 | chrome 62.0 for android | 1920x1080"
+   },
+   "rows": 1
+  },
+  {
+   "tool": "device_txns",
+   "params": {
+    "device": "SM-G935F Build/NRD90M | Android 7.0 | chrome 62.0 for android | 1920x1080",
+    "t_from": "2016-11-08 16:11:00",
+    "t_to": "2016-11-22 20:11:00"
+   },
+   "rows": 26
+  },
+  {
+   "tool": "cases_by_device",
+   "params": {
+    "device": "SM-G935F Build/NRD90M | Android 7.0 | chrome 62.0 for android | 1920x1080"
+   },
+   "rows": 4
+  },
+  {
+   "tool": "fraud_proximity",
+   "params": {
+    "card_id": "C13487-K1"
+   },
+   "rows": 4
+  },
+  {
+   "tool": "cases_by_card",
+   "params": {
+    "card_id": "C13487-K1"
+   },
+   "rows": 0
+  },
+  {
+   "tool": "case_memory",
+   "params": {
+    "pattern": "undocumented",
+    "device": "SM-G935F Build/NRD90M | Android 7.0 | chrome 62.0 for android | 1920x1080"
+   },
+   "rows": 1
+  },
+  {
+   "tool": "write_case(local)",
+   "params": {
+    "id": "INV-HHG-014"
+   },
+   "rows": 1
+  }
+ ],
+ "decision_history": [
+  {
+   "phase": "assessment",
+   "probability": 0.96,
+   "verdict": "fraud",
+   "recommended": [
+    "BLOCK_CARD",
+    "CREATE_CASE",
+    "FILE_REPORT",
+    "MONITOR_CONNECTED_CARDS",
+    "ESCALATE_TO_ANALYST"
+   ]
+  },
+  {
+   "at": "2026-09-22T18:31:13+00:00",
+   "action": "BLOCK_CARD",
+   "route": "L1",
+   "status": "pending_approval",
+   "detail": "requires L1; no approval supplied"
+  },
+  {
+   "at": "2026-09-22T18:31:13+00:00",
+   "action": "CREATE_CASE",
+   "route": "auto",
+   "status": "executed",
+   "detail": "case opened for C13487-K1"
+  },
+  {
+   "at": "2026-09-22T18:31:13+00:00",
+   "action": "FILE_REPORT",
+   "route": "L2",
+   "status": "pending_approval",
+   "detail": "requires L2; no approval supplied"
+  },
+  {
+   "at": "2026-09-22T18:31:13+00:00",
+   "action": "MONITOR_CONNECTED_CARDS",
+   "route": "auto",
+   "status": "executed",
+   "detail": "connected cards of C13487-K1 added to watch-list"
+  },
+  {
+   "at": "2026-09-22T18:31:13+00:00",
+   "action": "ESCALATE_TO_ANALYST",
+   "route": "auto",
+   "status": "executed",
+   "detail": "case for C13487-K1 placed in analyst queue"
+  }
+ ],
+ "p_initial": 0.96,
+ "episode": [
+  {
+   "id": "3460634",
+   "amt": 112.37000274658203,
+   "channel": "online",
+   "ts": "2016-11-15 20:30:00",
+   "device": "SM-G935F Build/NRD90M | Android 7.0 | chrome 62.0 for android | 1920x1080",
+   "addr1": "191"
+  },
+  {
+   "id": "3478561",
+   "amt": 74.95999908447266,
+   "channel": "online",
+   "ts": "2016-11-22 16:11:00",
+   "device": "SM-G935F Build/NRD90M | Android 7.0 | chrome 62.0 for android | 1920x1080",
+   "addr1": "191"
+  }
+ ],
+ "flagged": {
+  "id": "3478561",
+  "amt": 74.95999908447266,
+  "ts": "2016-11-22 16:11:00",
+  "channel": "online",
+  "device": "SM-G935F Build/NRD90M | Android 7.0 | chrome 62.0 for android | 1920x1080",
+  "region": "191",
+  "risk_score": 0.05,
+  "p_model": 0.03601206959265501
+ }
+}

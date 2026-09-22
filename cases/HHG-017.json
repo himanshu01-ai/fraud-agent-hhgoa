@@ -1,0 +1,105 @@
+{
+  "case_id": "HHG-017",
+  "case": {
+    "status": "closed_legitimate",
+    "verdict": "legitimate",
+    "fraud_probability": 0.06,
+    "pattern": "none",
+    "pattern_description": "",
+    "affected_txn_ids": [],
+    "first_suspicious_txn_id": "",
+    "connected_card_ids": [],
+    "connected_device_profiles": [],
+    "exposure_usd": 0.0,
+    "evidence": [
+      {
+        "claim": "3 near-identical online charges ($100.09, $99.96, $100.09) within 70 minutes from the same device/email; case-memory model mean score 0.01",
+        "source": "graph",
+        "ref": "query:card_txns(c=C04570-K1)",
+        "entity_ids": [
+          "3450436",
+          "3450503",
+          "3450629"
+        ]
+      },
+      {
+        "claim": "Device profile \"Windows | Windows 10 | chrome 65.0 | 1920x1080\" was used on this card more than a week before this alert",
+        "source": "graph",
+        "ref": "query:card_txns(c=C04570-K1)",
+        "entity_ids": [
+          "3450629"
+        ]
+      },
+      {
+        "claim": "Connection behind IP_PROXY:HIDDEN",
+        "source": "graph",
+        "ref": "query:card_txns(c=C04570-K1)",
+        "entity_ids": [
+          "3450629"
+        ]
+      },
+      {
+        "claim": "$100.09 is within the card's normal range (median $199.98, 90th percentile $979.94)",
+        "source": "graph",
+        "ref": "query:card_txns(c=C04570-K1)",
+        "entity_ids": [
+          "3450629"
+        ]
+      },
+      {
+        "claim": "Case-memory model (trained on 5,565 closed cases) scores the flagged transaction 0.01; bank risk score 0.57",
+        "source": "external",
+        "ref": "model:case_memory_lgbm",
+        "entity_ids": [
+          "3450629"
+        ]
+      },
+      {
+        "claim": "1 earlier closed case(s) on this card (0 confirmed fraud)",
+        "source": "graph",
+        "ref": "query:cases_by_card",
+        "entity_ids": [
+          "CC-1383"
+        ]
+      }
+    ],
+    "similar_prior_cases": [
+      "CC-2537",
+      "CC-2695",
+      "CC-1383"
+    ],
+    "summary": "Legitimate activity on card C04570-K1 (risk score): Real-time model scored transaction 3450629 ($100.09, online) at 0.57. 3 near-identical online charges ($100.09, $99.96, $100.09) within 70 minutes from the same device/email; case-memory model mean score 0.01. Device profile \"Windows | Windows 10 | chrome 65.0 | 1920x1080\" was used on this card more than a week before this alert. Final probability 0.06; exposure $0.00; actions: CLOSE_NO_FRAUD.",
+    "written_to_graph": false,
+    "graph_case_id": "INV-HHG-017"
+  },
+  "evidence_requests": [],
+  "next_best_actions": {
+    "initial": [
+      {
+        "action": "CLOSE_NO_FRAUD",
+        "route": "auto",
+        "reason": "\u00a76 stopping: probability 0.06 with 2 independent pieces of legitimate evidence; no rule calls for verification"
+      }
+    ],
+    "final": [
+      {
+        "action": "CLOSE_NO_FRAUD",
+        "route": "auto",
+        "reason": "\u00a76 stopping: probability 0.06 with 2 independent pieces of legitimate evidence; no rule calls for verification"
+      }
+    ],
+    "what_changed": "nothing"
+  },
+  "sar": {
+    "file": false,
+    "reason": "No report: verdict is legitimate; \u00a73a requires confirmed or strongly suspected fraud.",
+    "narrative": "",
+    "subjects": [],
+    "total_amount_usd": 0,
+    "activity_dates": []
+  },
+  "stop_reason": "Probability 0.06 \u2264 0.15 supported by 2 independent pieces of evidence (\u00a76). Further steps would not change the decision.",
+  "tool_calls": 9,
+  "tokens": 0,
+  "latency_s": 0.04
+}

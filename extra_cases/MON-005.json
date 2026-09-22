@@ -1,0 +1,105 @@
+{
+  "case_id": "MON-005",
+  "case": {
+    "status": "closed_legitimate",
+    "verdict": "legitimate",
+    "fraud_probability": 0.04,
+    "pattern": "none",
+    "pattern_description": "",
+    "affected_txn_ids": [],
+    "first_suspicious_txn_id": "",
+    "connected_card_ids": [],
+    "connected_device_profiles": [],
+    "exposure_usd": 0.0,
+    "evidence": [
+      {
+        "claim": "Device profile \"HUAWEI VNS-L23 Build/HUAWEIVNS-L23 | NA | chrome 65.0 for android | NA\" was used on this card more than a week before this alert",
+        "source": "graph",
+        "ref": "query:card_txns(c=C08962-K2)",
+        "entity_ids": [
+          "3423345"
+        ]
+      },
+      {
+        "claim": "$21.90 is within the card's normal range (median $26.18, 90th percentile $75.96)",
+        "source": "graph",
+        "ref": "query:card_txns(c=C08962-K2)",
+        "entity_ids": [
+          "3423345"
+        ]
+      },
+      {
+        "claim": "244 confirmed-fraud closed case(s) within two hops of this card through shared rare device profiles in the last 30 days (CC-0071, CC-0137, CC-0290, CC-0497, CC-0603, CC-0700)",
+        "source": "graph",
+        "ref": "query:fraud_proximity",
+        "entity_ids": [
+          "C08962-K2",
+          "CC-0071",
+          "CC-0137",
+          "CC-0290",
+          "CC-0497",
+          "CC-0603",
+          "CC-0700"
+        ]
+      },
+      {
+        "claim": "Case-memory model (trained on 5,565 closed cases) scores the flagged transaction 0.05; bank risk score 0.02",
+        "source": "external",
+        "ref": "model:case_memory_lgbm",
+        "entity_ids": [
+          "3423345"
+        ]
+      },
+      {
+        "claim": "12 earlier closed case(s) on this card (11 confirmed fraud)",
+        "source": "graph",
+        "ref": "query:cases_by_card",
+        "entity_ids": [
+          "CC-3873",
+          "CC-3933",
+          "CC-4156",
+          "CC-5187",
+          "CC-5536"
+        ]
+      }
+    ],
+    "similar_prior_cases": [
+      "CC-2537",
+      "CC-2695",
+      "CC-5536"
+    ],
+    "summary": "Legitimate activity on card C08962-K2 (analyst request): Monitor: device profile \"HUAWEI VNS-L23 Build/HUAWEIVNS-L23 | NA | chrome 65.0 for android | NA\" hit 4 cards between 2016-11-01 and 2016-11-08. Device profile \"HUAWEI VNS-L23 Build/HUAWEIVNS-L23 | NA | chrome 65.0 for android | NA\" was used on this card more than a week before this alert. $21.90 is within the card's normal range (median $26.18, 90th percentile $75.96). Final probability 0.04; exposure $0.00; actions: CLOSE_NO_FRAUD.",
+    "written_to_graph": false,
+    "graph_case_id": "INV-MON-005"
+  },
+  "evidence_requests": [],
+  "next_best_actions": {
+    "initial": [
+      {
+        "action": "CLOSE_NO_FRAUD",
+        "route": "auto",
+        "reason": "\u00a76 stopping: probability 0.04 with 2 independent pieces of legitimate evidence; no rule calls for verification"
+      }
+    ],
+    "final": [
+      {
+        "action": "CLOSE_NO_FRAUD",
+        "route": "auto",
+        "reason": "\u00a76 stopping: probability 0.04 with 2 independent pieces of legitimate evidence; no rule calls for verification"
+      }
+    ],
+    "what_changed": "nothing"
+  },
+  "sar": {
+    "file": false,
+    "reason": "No report: verdict is legitimate; \u00a73a requires confirmed or strongly suspected fraud.",
+    "narrative": "",
+    "subjects": [],
+    "total_amount_usd": 0,
+    "activity_dates": []
+  },
+  "stop_reason": "Probability 0.04 \u2264 0.15 supported by 2 independent pieces of evidence (\u00a76). Further steps would not change the decision.",
+  "tool_calls": 10,
+  "tokens": 0,
+  "latency_s": 0.06
+}

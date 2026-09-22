@@ -1,0 +1,163 @@
+{
+ "case_id": "HHG-012",
+ "trace": [
+  {
+   "step": 1,
+   "name": "trigger",
+   "detail": "risk_score: Real-time model scored transaction 3553342 ($30.91, in billing region 494.0) at 0.55. Review and decide.",
+   "tool_calls_so_far": 1
+  },
+  {
+   "step": 2,
+   "name": "card_profile",
+   "detail": "910 prior transactions on C05876-K2; median $49.08",
+   "tool_calls_so_far": 3
+  },
+  {
+   "step": 3,
+   "name": "cardholder_profile",
+   "detail": "behaviour profile C05876_494.0_169.0: 1 transactions",
+   "tool_calls_so_far": 4
+  },
+  {
+   "step": 4,
+   "name": "prior_cases",
+   "detail": "2 closed cases on this card, 0 on this device",
+   "tool_calls_so_far": 6
+  },
+  {
+   "step": 5,
+   "name": "detectors",
+   "detail": "amount_in_range(-0.3), region_habitual(-0.8), case_memory_model(+0.0)",
+   "tool_calls_so_far": 6
+  },
+  {
+   "step": 6,
+   "name": "assess",
+   "detail": "p=0.01, 0 fraud / 2 legitimate independent evidence, provisional pattern card_not_present_fraud, verdict legitimate",
+   "tool_calls_so_far": 6
+  },
+  {
+   "step": 7,
+   "name": "policy",
+   "detail": "initial=['CLOSE_NO_FRAUD'] response=None final=['CLOSE_NO_FRAUD']",
+   "tool_calls_so_far": 6
+  },
+  {
+   "step": 8,
+   "name": "memory",
+   "detail": "retrieved closed cases ['CC-2850', 'CC-2749', 'CC-2370']; 0 earlier investigations in case memory",
+   "tool_calls_so_far": 7
+  },
+  {
+   "step": 9,
+   "name": "explain",
+   "detail": "summary and report narrative written (template)",
+   "tool_calls_so_far": 7
+  },
+  {
+   "step": 10,
+   "name": "execute",
+   "detail": "CLOSE_NO_FRAUD:executed",
+   "tool_calls_so_far": 7
+  },
+  {
+   "step": 11,
+   "name": "case_memory_write",
+   "detail": "INV-HHG-012 written to local case memory",
+   "tool_calls_so_far": 8
+  }
+ ],
+ "tool_log": [
+  {
+   "tool": "get_txn",
+   "params": {
+    "txn_id": 3553342
+   },
+   "rows": 1
+  },
+  {
+   "tool": "card_txns",
+   "params": {
+    "card_id": "C05876-K2",
+    "t_from": "2016-07-01 00:00:00",
+    "t_to": "2016-12-18 04:00:30"
+   },
+   "rows": 910
+  },
+  {
+   "tool": "card_txns",
+   "params": {
+    "card_id": "C05876-K2",
+    "t_from": "2016-12-11 04:00:31",
+    "t_to": "2016-12-18 05:00:31"
+   },
+   "rows": 59
+  },
+  {
+   "tool": "cardholder_txns",
+   "params": {
+    "uid": "C05876_494.0_169.0"
+   },
+   "rows": 1
+  },
+  {
+   "tool": "fraud_proximity",
+   "params": {
+    "card_id": "C05876-K2"
+   },
+   "rows": 0
+  },
+  {
+   "tool": "cases_by_card",
+   "params": {
+    "card_id": "C05876-K2"
+   },
+   "rows": 2
+  },
+  {
+   "tool": "case_memory",
+   "params": {
+    "pattern": "none",
+    "device": null
+   },
+   "rows": 11
+  },
+  {
+   "tool": "write_case(local)",
+   "params": {
+    "id": "INV-HHG-012"
+   },
+   "rows": 1
+  }
+ ],
+ "decision_history": [
+  {
+   "phase": "assessment",
+   "probability": 0.01,
+   "verdict": "legitimate",
+   "recommended": [
+    "CLOSE_NO_FRAUD"
+   ]
+  },
+  {
+   "at": "2026-09-22T18:31:13+00:00",
+   "action": "CLOSE_NO_FRAUD",
+   "route": "auto",
+   "status": "executed",
+   "detail": "alert on C05876-K2 closed as legitimate"
+  }
+ ],
+ "p_initial": 0.01,
+ "episode": [],
+ "flagged": {
+  "id": "3553342",
+  "amt": 30.90999984741211,
+  "ts": "2016-12-18 04:00:31",
+  "channel": "in_person",
+  "device": "",
+  "region": "494",
+  "risk_score": 0.55,
+  "p_model": 0.002554643110693931
+ }
+}

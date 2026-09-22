@@ -1,0 +1,134 @@
+{
+  "case_id": "HHG-007",
+  "case": {
+    "status": "closed_legitimate",
+    "verdict": "legitimate",
+    "fraud_probability": 0.08,
+    "pattern": "none",
+    "pattern_description": "",
+    "affected_txn_ids": [],
+    "first_suspicious_txn_id": "",
+    "connected_card_ids": [],
+    "connected_device_profiles": [],
+    "exposure_usd": 0.0,
+    "evidence": [
+      {
+        "claim": "$111.92 is within the card's normal range (median $77.04, 90th percentile $225.98)",
+        "source": "graph",
+        "ref": "query:card_txns(c=C09933-K2)",
+        "entity_ids": [
+          "3514948"
+        ]
+      },
+      {
+        "claim": "Billing region 264 has 2220 prior card-present transactions on this card",
+        "source": "graph",
+        "ref": "query:card_txns(c=C09933-K2)",
+        "entity_ids": [
+          "3514948"
+        ]
+      },
+      {
+        "claim": "44 confirmed-fraud closed case(s) within two hops of this card through shared rare device profiles in the last 30 days (CC-0629, CC-1561, CC-2673, CC-2716, CC-3040, CC-3491)",
+        "source": "graph",
+        "ref": "query:fraud_proximity",
+        "entity_ids": [
+          "C09933-K2",
+          "CC-0629",
+          "CC-1561",
+          "CC-2673",
+          "CC-2716",
+          "CC-3040",
+          "CC-3491"
+        ]
+      },
+      {
+        "claim": "Case-memory model (trained on 5,565 closed cases) scores the flagged transaction 0.06; bank risk score 0.87",
+        "source": "external",
+        "ref": "model:case_memory_lgbm",
+        "entity_ids": [
+          "3514948"
+        ]
+      },
+      {
+        "claim": "19 earlier closed case(s) on this card (18 confirmed fraud)",
+        "source": "graph",
+        "ref": "query:cases_by_card",
+        "entity_ids": [
+          "CC-4455",
+          "CC-4597",
+          "CC-4787",
+          "CC-5092",
+          "CC-5521"
+        ]
+      },
+      {
+        "claim": "Customer confirms they made the purchase while travelling",
+        "source": "customer",
+        "ref": "evidence_request:1",
+        "entity_ids": []
+      },
+      {
+        "claim": "Policy R1 applied",
+        "source": "document",
+        "ref": "rag/fraud_policy.md#R1",
+        "entity_ids": []
+      },
+      {
+        "claim": "Policy R3 applied",
+        "source": "document",
+        "ref": "rag/fraud_policy.md#R3",
+        "entity_ids": []
+      }
+    ],
+    "similar_prior_cases": [
+      "CC-2850",
+      "CC-2749",
+      "CC-5521"
+    ],
+    "summary": "Legitimate activity on card C09933-K2 (risk score): Real-time model scored transaction 3514948 ($111.92, in billing region 264.0) at 0.87. $111.92 is within the card's normal range (median $77.04, 90th percentile $225.98). Billing region 264 has 2220 prior card-present transactions on this card. Evidence requested; assumed response: Customer confirms they made the purchase while travelling. Final probability 0.08; exposure $0.00; actions: CLOSE_NO_FRAUD.",
+    "written_to_graph": false,
+    "graph_case_id": "INV-HHG-007"
+  },
+  "evidence_requests": [
+    {
+      "type": "customer_validation",
+      "asked_after_step": 6,
+      "assumed_response": "Customer confirms they made the purchase while travelling (simulated: response chosen to be consistent with the pre-request evidence, assessed probability 0.04)"
+    }
+  ],
+  "next_best_actions": {
+    "initial": [
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "\u00a73a: evidence is being requested / customer dispute \u2014 open a case"
+      },
+      {
+        "action": "VERIFY_WITH_CUSTOMER",
+        "route": "auto",
+        "reason": "R1: assessed probability 0.04 < 0.70 on weak / single-signal evidence \u2014 verify before any block"
+      }
+    ],
+    "final": [
+      {
+        "action": "CLOSE_NO_FRAUD",
+        "route": "auto",
+        "reason": "R3: customer confirmed the transaction; confirmation noted in the case"
+      }
+    ],
+    "what_changed": "Customer confirmed the transaction: probability moved from 0.04 to 0.08 and the recommendation changed from CREATE_CASE, VERIFY_WITH_CUSTOMER to CLOSE_NO_FRAUD."
+  },
+  "sar": {
+    "file": false,
+    "reason": "No report: verdict is legitimate; \u00a73a requires confirmed or strongly suspected fraud.",
+    "narrative": "",
+    "subjects": [],
+    "total_amount_usd": 0,
+    "activity_dates": []
+  },
+  "stop_reason": "The verification response settles the question (\u00a76).",
+  "tool_calls": 8,
+  "tokens": 0,
+  "latency_s": 0.03
+}

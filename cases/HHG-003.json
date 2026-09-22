@@ -1,0 +1,128 @@
+{
+  "case_id": "HHG-003",
+  "case": {
+    "status": "closed_legitimate",
+    "verdict": "legitimate",
+    "fraud_probability": 0.08,
+    "pattern": "none",
+    "pattern_description": "",
+    "affected_txn_ids": [],
+    "first_suspicious_txn_id": "",
+    "connected_card_ids": [],
+    "connected_device_profiles": [],
+    "exposure_usd": 0.0,
+    "evidence": [
+      {
+        "claim": "Purchaser email domain me.com never used on this card in 980 prior transactions",
+        "source": "graph",
+        "ref": "query:card_txns(c=C08623-K2)",
+        "entity_ids": [
+          "3530164"
+        ]
+      },
+      {
+        "claim": "$49.00 is within the card's normal range (median $67.92, 90th percentile $307.02)",
+        "source": "graph",
+        "ref": "query:card_txns(c=C08623-K2)",
+        "entity_ids": [
+          "3530164"
+        ]
+      },
+      {
+        "claim": "Billing region 330 has 42 prior card-present transactions on this card",
+        "source": "graph",
+        "ref": "query:card_txns(c=C08623-K2)",
+        "entity_ids": [
+          "3530164"
+        ]
+      },
+      {
+        "claim": "Case-memory model (trained on 5,565 closed cases) scores the flagged transaction 0.04; bank risk score 0.40",
+        "source": "external",
+        "ref": "model:case_memory_lgbm",
+        "entity_ids": [
+          "3530164"
+        ]
+      },
+      {
+        "claim": "6 earlier closed case(s) on this card (5 confirmed fraud)",
+        "source": "graph",
+        "ref": "query:cases_by_card",
+        "entity_ids": [
+          "CC-2817",
+          "CC-2935",
+          "CC-3327",
+          "CC-3682",
+          "CC-4957"
+        ]
+      },
+      {
+        "claim": "Shown the merchant, date, amount and region, the customer recognises the charge as their own (it matches their regular spending) and withdraws the dispute",
+        "source": "customer",
+        "ref": "evidence_request:1",
+        "entity_ids": []
+      },
+      {
+        "claim": "Policy R1 applied",
+        "source": "document",
+        "ref": "rag/fraud_policy.md#R1",
+        "entity_ids": []
+      },
+      {
+        "claim": "Policy R3 applied",
+        "source": "document",
+        "ref": "rag/fraud_policy.md#R3",
+        "entity_ids": []
+      }
+    ],
+    "similar_prior_cases": [
+      "CC-2850",
+      "CC-2749",
+      "CC-4957"
+    ],
+    "summary": "Legitimate activity on card C08623-K2 (customer report): Customer C08623 message: 'I never made this $49.00 purchase. Please check my card.' Refers to 3530164. Purchaser email domain me.com never used on this card in 980 prior transactions. $49.00 is within the card's normal range (median $67.92, 90th percentile $307.02). Evidence requested; assumed response: Shown the merchant, date, amount and region, the customer recognises the charge as their own (it matches their regular spending) and withdraws the dispute. Final probability 0.08; exposure $0.00; actions: CLOSE_NO_FRAUD.",
+    "written_to_graph": false,
+    "graph_case_id": "INV-HHG-003"
+  },
+  "evidence_requests": [
+    {
+      "type": "customer_validation",
+      "asked_after_step": 6,
+      "assumed_response": "Shown the merchant, date, amount and region, the customer recognises the charge as their own (it matches their regular spending) and withdraws the dispute (simulated: response chosen to be consistent with the pre-request evidence, assessed probability 0.21)"
+    }
+  ],
+  "next_best_actions": {
+    "initial": [
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "\u00a73a: evidence is being requested / customer dispute \u2014 open a case"
+      },
+      {
+        "action": "VERIFY_WITH_CUSTOMER",
+        "route": "auto",
+        "reason": "R1: assessed probability 0.21 < 0.70 on weak / single-signal evidence \u2014 verify before any block"
+      }
+    ],
+    "final": [
+      {
+        "action": "CLOSE_NO_FRAUD",
+        "route": "auto",
+        "reason": "R3: customer confirmed the transaction; confirmation noted in the case"
+      }
+    ],
+    "what_changed": "Customer confirmed the transaction: probability moved from 0.21 to 0.08 and the recommendation changed from CREATE_CASE, VERIFY_WITH_CUSTOMER to CLOSE_NO_FRAUD."
+  },
+  "sar": {
+    "file": false,
+    "reason": "No report: verdict is legitimate; \u00a73a requires confirmed or strongly suspected fraud.",
+    "narrative": "",
+    "subjects": [],
+    "total_amount_usd": 0,
+    "activity_dates": []
+  },
+  "stop_reason": "The verification response settles the question (\u00a76).",
+  "tool_calls": 8,
+  "tokens": 0,
+  "latency_s": 0.02
+}

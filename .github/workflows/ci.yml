@@ -1,0 +1,22 @@
+name: ci
+on:
+  pull_request:
+  push:
+    branches: [main]
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install light deps
+        run: pip install pytest pandas numpy scikit-learn
+      - name: Syntax check every Python file
+        run: python -m compileall -q agent scripts ui run_cases.py
+      - name: Permission + answer-contract tests
+        run: python -m pytest -q tests
+      - name: No secrets or data committed
+        run: |
+          ! git ls-files | grep -E '(^|/)\.env$|\.pkl$|transactions.*\.csv$|identity\.csv$|case_pack\.csv$|closed_cases_history\.csv$'

@@ -1,0 +1,208 @@
+{
+ "case_id": "HHG-018",
+ "trace": [
+  {
+   "step": 1,
+   "name": "trigger",
+   "detail": "customer_report: Customer C02354 message: 'I never made this $39.08 purchase. Please check my card.' Refers to 3491361.",
+   "tool_calls_so_far": 1
+  },
+  {
+   "step": 2,
+   "name": "card_profile",
+   "detail": "5860 prior transactions on C02354-K2; median $86.92",
+   "tool_calls_so_far": 3
+  },
+  {
+   "step": 3,
+   "name": "cardholder_profile",
+   "detail": "behaviour profile C02354_126.0_-185.0: 14 transactions",
+   "tool_calls_so_far": 4
+  },
+  {
+   "step": 4,
+   "name": "prior_cases",
+   "detail": "20 closed cases on this card, 0 on this device",
+   "tool_calls_so_far": 6
+  },
+  {
+   "step": 5,
+   "name": "detectors",
+   "detail": "amount_in_range(-0.3), region_habitual(-0.8), cardholder_habit(-1.5), fraud_proximity(+0.3), case_memory_model(+0.0)",
+   "tool_calls_so_far": 6
+  },
+  {
+   "step": 6,
+   "name": "assess",
+   "detail": "p=0.07, 1 fraud / 2 legitimate independent evidence, provisional pattern card_not_present_fraud, verdict legitimate",
+   "tool_calls_so_far": 6
+  },
+  {
+   "step": 7,
+   "name": "policy",
+   "detail": "initial=['CREATE_CASE', 'VERIFY_WITH_CUSTOMER', 'WARN_CUSTOMER'] response=confirm final=['WARN_CUSTOMER', 'CLOSE_NO_FRAUD']",
+   "tool_calls_so_far": 6
+  },
+  {
+   "step": 8,
+   "name": "memory",
+   "detail": "retrieved closed cases ['CC-2850', 'CC-2749', 'CC-5558']; 0 earlier investigations in case memory",
+   "tool_calls_so_far": 7
+  },
+  {
+   "step": 9,
+   "name": "explain",
+   "detail": "summary and report narrative written (template)",
+   "tool_calls_so_far": 7
+  },
+  {
+   "step": 10,
+   "name": "execute",
+   "detail": "CREATE_CASE:executed, VERIFY_WITH_CUSTOMER:executed, WARN_CUSTOMER:executed, WARN_CUSTOMER:executed, CLOSE_NO_FRAUD:executed",
+   "tool_calls_so_far": 7
+  },
+  {
+   "step": 11,
+   "name": "case_memory_write",
+   "detail": "INV-HHG-018 written to local case memory",
+   "tool_calls_so_far": 8
+  }
+ ],
+ "tool_log": [
+  {
+   "tool": "get_txn",
+   "params": {
+    "txn_id": 3491361
+   },
+   "rows": 1
+  },
+  {
+   "tool": "card_txns",
+   "params": {
+    "card_id": "C02354-K2",
+    "t_from": "2016-07-01 00:00:00",
+    "t_to": "2016-11-27 13:41:25"
+   },
+   "rows": 5860
+  },
+  {
+   "tool": "card_txns",
+   "params": {
+    "card_id": "C02354-K2",
+    "t_from": "2016-11-20 13:41:26",
+    "t_to": "2016-11-27 14:41:26"
+   },
+   "rows": 267
+  },
+  {
+   "tool": "cardholder_txns",
+   "params": {
+    "uid": "C02354_126.0_-185.0"
+   },
+   "rows": 15
+  },
+  {
+   "tool": "fraud_proximity",
+   "params": {
+    "card_id": "C02354-K2"
+   },
+   "rows": 48
+  },
+  {
+   "tool": "cases_by_card",
+   "params": {
+    "card_id": "C02354-K2"
+   },
+   "rows": 20
+  },
+  {
+   "tool": "case_memory",
+   "params": {
+    "pattern": "none",
+    "device": null
+   },
+   "rows": 3
+  },
+  {
+   "tool": "write_case(local)",
+   "params": {
+    "id": "INV-HHG-018"
+   },
+   "rows": 1
+  }
+ ],
+ "decision_history": [
+  {
+   "phase": "assessment",
+   "probability": 0.07,
+   "verdict": "legitimate",
+   "recommended": [
+    "CREATE_CASE",
+    "VERIFY_WITH_CUSTOMER",
+    "WARN_CUSTOMER"
+   ]
+  },
+  {
+   "phase": "evidence_request",
+   "type": "customer_validation",
+   "response": "confirm",
+   "detail": "Shown the merchant, date, amount and region, the customer recognises the charge as their own (it matches their regular spending) and withdraws the dispute (simulated: response chosen to be consistent with the pre-request evidence, assessed probability 0.07)"
+  },
+  {
+   "phase": "reassessment",
+   "probability": 0.08,
+   "verdict": "legitimate",
+   "recommended": [
+    "WARN_CUSTOMER",
+    "CLOSE_NO_FRAUD"
+   ]
+  },
+  {
+   "at": "2026-09-22T18:31:13+00:00",
+   "action": "CREATE_CASE",
+   "route": "auto",
+   "status": "executed",
+   "detail": "case opened for C02354-K2"
+  },
+  {
+   "at": "2026-09-22T18:31:13+00:00",
+   "action": "VERIFY_WITH_CUSTOMER",
+   "route": "auto",
+   "status": "executed",
+   "detail": "verification request sent to holder of C02354-K2"
+  },
+  {
+   "at": "2026-09-22T18:31:13+00:00",
+   "action": "WARN_CUSTOMER",
+   "route": "auto",
+   "status": "executed",
+   "detail": "informational message queued for holder of C02354-K2"
+  },
+  {
+   "at": "2026-09-22T18:31:13+00:00",
+   "action": "WARN_CUSTOMER",
+   "route": "auto",
+   "status": "executed",
+   "detail": "informational message queued for holder of C02354-K2"
+  },
+  {
+   "at": "2026-09-22T18:31:13+00:00",
+   "action": "CLOSE_NO_FRAUD",
+   "route": "auto",
+   "status": "executed",
+   "detail": "alert on C02354-K2 closed as legitimate"
+  }
+ ],
+ "p_initial": 0.07,
+ "episode": [],
+ "flagged": {
+  "id": "3491361",
+  "amt": 39.08000183105469,
+  "ts": "2016-11-27 13:41:26",
+  "channel": "in_person",
+  "device": "",
+  "region": "126",
+  "risk_score": 0.48,
+  "p_model": 0.06786337571356575
+ }
+}
