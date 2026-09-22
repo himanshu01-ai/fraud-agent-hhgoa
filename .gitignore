@@ -1,6 +1,29 @@
+# Secrets — never commit. .env.example is the committed template.
 .env
-data/*.pkl
-data/graph/
-data/model.txt
-__pycache__/
+.env.local
+
+# Working data. Scripts recreate these dirs with os.makedirs().
+data/
+
+# Models / pickles anywhere in the tree
+*.pkl
+
+# Supplied dataset files — never commit (competition rules + size)
 *.csv
+transactions*.csv
+identity.csv
+case_pack.csv
+closed_cases_history.csv
+
+# Python
+__pycache__/
+*.py[codz]
+.venv/
+venv/
+env/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+build/
+dist/

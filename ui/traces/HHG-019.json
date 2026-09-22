@@ -174,35 +174,35 @@
    ]
   },
   {
-   "at": "2026-09-22T18:31:13+00:00",
+   "at": "2026-09-22T19:02:28+00:00",
    "action": "BLOCK_CARD",
    "route": "L1",
    "status": "pending_approval",
    "detail": "requires L1; no approval supplied"
   },
   {
-   "at": "2026-09-22T18:31:13+00:00",
+   "at": "2026-09-22T19:02:28+00:00",
    "action": "CREATE_CASE",
    "route": "auto",
    "status": "executed",
    "detail": "case opened for C07987-K2"
   },
   {
-   "at": "2026-09-22T18:31:13+00:00",
+   "at": "2026-09-22T19:02:28+00:00",
    "action": "FILE_REPORT",
    "route": "L2",
    "status": "pending_approval",
    "detail": "requires L2; no approval supplied"
   },
   {
-   "at": "2026-09-22T18:31:13+00:00",
+   "at": "2026-09-22T19:02:28+00:00",
    "action": "MONITOR_CONNECTED_CARDS",
    "route": "auto",
    "status": "executed",
    "detail": "connected cards of C07987-K2 added to watch-list"
   },
   {
-   "at": "2026-09-22T18:31:13+00:00",
+   "at": "2026-09-22T19:02:28+00:00",
    "action": "ESCALATE_TO_ANALYST",
    "route": "auto",
    "status": "executed",
