@@ -7,6 +7,7 @@ Status: TODO · IN PROGRESS · IN REVIEW · DONE · BLOCKED
 | 0 | Repo on GitHub, `main` protected, CI on, teammates added |  | main | 45m | TODO | |
 | 1a | Answer-format audit of cases/ vs dataset README |  | feat/C-step1-format-audit | 1h | TODO | |
 | 1b | Policy read-through + local benchmark dry run |  | feat/B-step1-dryrun | 1h | TODO | |
+| 1d | Organisers' dataset brief committed verbatim + README links | A (@himanshu01-ai) | docs/dataset-brief | 15m | IN PROGRESS | docs/HHGOA_DATASET_README.md, 38663 bytes; rag/ verified no drift |
 | 2 | Feature store (01_build_features.py) |  | feat/A-step2-features | 1h | TODO | expect 590742 / 14317 / 9706 |
 | 3 | Case-memory model (02) |  | feat/A-step3-model | 1h | TODO | AUC ≈0.91 / 0.88 |
 | 4 | Savanna workspace + .env shared privately |  | — | 30m | TODO | auto-stop/start ON |
